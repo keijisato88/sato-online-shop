@@ -89,6 +89,22 @@
             <p class="text-lg text-gray-700 mb-6">
                 Total Amount: <span id="modal-total-amount" class="font-bold text-purple-700 text-2xl">₱0</span>
             </p>
+            <!-- Input fields for buyer information -->
+            <div class="mb-4">
+                <label for="buyer-name" class="block text-md text-gray-700 font-medium mb-1 text-left">Buyer's Name (購入者のお名前):</label>
+                <input type="text" id="buyer-name" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none" placeholder="Your Name">
+            </div>
+            <div class="mb-4">
+                <label for="messenger-name" class="block text-md text-gray-700 font-medium mb-1 text-left">Facebook Messenger Name (Facebookメッセンジャーの名前):</label>
+                <input type="text" id="messenger-name" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none" placeholder="Messenger Name">
+            </div>
+            <!-- New input field for message to seller -->
+            <div class="mb-6">
+                <label for="message-to-seller" class="block text-md text-gray-700 font-medium mb-1 text-left">Message to Seller (お店へのメッセージ):</label>
+                <textarea id="message-to-seller" rows="3" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none resize-y" placeholder="Optional message..."></textarea>
+            </div>
+
+            <p class="text-md text-gray-600 mb-8 font-semibold">Cash payment only.</p> <!-- Cash payment information -->
             <p class="text-md text-gray-600 mb-8">Do you want to proceed with this order?</p>
             <div class="flex justify-center space-x-4">
                 <button id="confirm-yes-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-5 rounded-lg shadow-md transition duration-300 ease-in-out">
@@ -138,30 +154,6 @@
                 { id: 'p10j', brand: 'Orihiro', englishName: 'Night Diet Tea', name: 'オリヒロ ナイトダイエットティー', englishFlavor: 'Unflavored', japaneseFlavor: '無香料', capacity: '20 packets of 2g', price: 320, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/61eoJCZ8EbL._AC_SY879_PIbundle-20,TopRight,0,0_SH20_.jpg', alt: 'オリヒロ ナイトダイエットティー 2g×20包' },
                 { id: 'p10e', brand: 'Cow Brand Soap', englishName: 'Cow Brand Red Box Soap', name: '牛乳石鹸 カウブランド 赤箱', englishFlavor: 'Original Scent', japaneseFlavor: 'オリジナル', capacity: '3 pieces of 90g', price: 200, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/61zgLvNtImL._AC_SX679_.jpg', alt: '牛乳石鹸 カウブランド 赤箱 90グラム×3個入り' },
                 { id: 'p10f', brand: 'Cow Brand Soap', englishName: 'Cow Brand Blue Box Soap', name: '牛乳石鹸 カウブランド 青箱', englishFlavor: 'Refreshing Scent', japaneseFlavor: 'さわやか', capacity: '3 pieces of 85g', price: 200, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/61CYBSex0uL._AC_SX679_.jpg', alt: '牛乳石鹸 カウブランド 青箱 85g×3個入り' },
-                { id: 'p8', brand: 'PixelPerfect', englishName: 'Compact Camera', name: 'コンパクトカメラ', englishFlavor: '4K Video', japaneseFlavor: '4K動画対応', capacity: '個', price: 35000, imageUrl: 'https://placehold.co/150x150/A7A7D7/FFFFFF?text=Camera', alt: 'コンパクトカメラ' },
-                { id: 'p9', brand: 'GamerPro', englishName: 'Gaming Keyboard', englishFlavor: 'RGB Backlit', japaneseFlavor: 'RGBバックライト', capacity: '個', price: 9500, imageUrl: 'https://placehold.co/150x150/8D8DE0/FFFFFF?text=Keyboard', alt: 'ゲーミングキーボード' },
-                { id: 'p10', brand: 'AquaPure', englishName: 'Eco-Friendly Bottle', name: 'エコフレンドリーボトル', englishFlavor: 'BPA Free', japaneseFlavor: 'BPAフリー', capacity: '500ml', price: 1800, imageUrl: 'https://placehold.co/150x150/70A3D9/FFFFFF?text=Bottle', alt: 'エコフレンドリーボトル' },
-                // --- Additional 20 placeholder products start here ---
-                { id: 'p11', brand: 'BrandX', englishName: 'Gaming Headset', name: 'ゲーミングヘッドセット', englishFlavor: 'Surround Sound', japaneseFlavor: 'サラウンドサウンド', capacity: '1個', price: 4500, imageUrl: 'https://placehold.co/150x150/FF6347/FFFFFF?text=Headset', alt: 'Gaming Headset' },
-                { id: 'p12', brand: 'EcoLiving', englishName: 'Bamboo Toothbrush', name: '竹歯ブラシ', englishFlavor: 'Soft Bristle', japaneseFlavor: 'やわらか毛', capacity: '4本パック', price: 250, imageUrl: 'https://placehold.co/150x150/5F9EA0/FFFFFF?text=Toothbrush', alt: 'Bamboo Toothbrush' },
-                { id: 'p13', brand: 'FitGear', englishName: 'Resistance Bands Set', name: 'レジスタンスバンドセット', englishFlavor: 'Multi-level', japaneseFlavor: '多段階レベル', capacity: '5本セット', price: 1200, imageUrl: 'https://placehold.co/150x150/CD5C5C/FFFFFF?text=Bands', alt: 'Resistance Bands Set' },
-                { id: 'p14', brand: 'ArtCraft', englishName: 'Sketchbook A4', name: 'スケッチブックA4', englishFlavor: 'Acid-Free Paper', japaneseFlavor: '中性紙', capacity: '1冊', price: 400, imageUrl: 'https://placehold.co/150x150/6A5ACD/FFFFFF?text=Sketchbook', alt: 'Sketchbook A4' },
-                { id: 'p15', brand: 'CookMaster', englishName: 'Silicone Spatula', name: 'シリコンヘラ', englishFlavor: 'Heat Resistant', japaneseFlavor: '耐熱性', capacity: '個', price: 150, imageUrl: 'https://placehold.co/150x150/FFD700/000000?text=Spatula', alt: 'Silicone Spatula' },
-                { id: 'p16', brand: 'HomeComfort', englishName: 'Memory Foam Pillow', name: '低反発枕', englishFlavor: 'Ergonomic Design', japaneseFlavor: '人間工学設計', capacity: '個', price: 2800, imageUrl: 'https://placehold.co/150x150/8B4513/FFFFFF?text=Pillow', alt: 'Memory Foam Pillow' },
-                { id: 'p17', brand: 'CleanLife', englishName: 'Microfiber Cleaning Cloths', name: 'マイクロファイバークロス', englishFlavor: 'Multi-purpose', japaneseFlavor: '多目的', capacity: '6枚組', price: 380, imageUrl: 'https://placehold.co/150x150/00CED1/FFFFFF?text=Cloth', alt: 'Microfiber Cleaning Cloths' },
-                { id: 'p18', brand: 'PetPal', englishName: 'Dog Chew Toy', name: '犬用噛むおもちゃ', englishFlavor: 'Durable Rubber', japaneseFlavor: '耐久性ラバー', capacity: '個', price: 700, imageUrl: 'https://placehold.co/150x150/DAA520/FFFFFF?text=Toy', alt: 'Dog Chew Toy' },
-                { id: 'p19', brand: 'GreenThumb', englishName: 'Gardening Gloves', name: 'ガーデニング手袋', englishFlavor: 'Waterproof', japaneseFlavor: '防水', capacity: '1組', price: 550, imageUrl: 'https://placehold.co/150x150/32CD32/FFFFFF?text=Gloves', alt: 'Gardening Gloves' },
-                { id: 'p20', brand: 'TechGadget', englishName: 'USB-C Hub', name: 'USB-Cハブ', englishFlavor: 'Multi-port', japaneseFlavor: 'マルチポート', capacity: '個', price: 2100, imageUrl: 'https://placehold.co/150x150/4682B4/FFFFFF?text=USBHub', alt: 'USB-C Hub' },
-                { id: 'p21', brand: 'SweetDelight', englishName: 'Assorted Chocolates', name: 'アソートチョコレート', englishFlavor: 'Variety Pack', japaneseFlavor: 'バラエティパック', capacity: '200g', price: 950, imageUrl: 'https://placehold.co/150x150/D8BFD8/000000?text=Chocolates', alt: 'Assorted Chocolates' },
-                { id: 'p22', brand: 'BrewMaster', englishName: 'Coffee Beans', name: 'コーヒー豆', englishFlavor: 'Medium Roast', japaneseFlavor: '中煎り', capacity: '250g', price: 600, imageUrl: 'https://placehold.co/150x150/A0522D/FFFFFF?text=Coffee', alt: 'Coffee Beans' },
-                { id: 'p23', brand: 'HealthyChoice', englishName: 'Protein Powder', name: 'プロテインパウダー', englishFlavor: 'Vanilla Flavor', japaneseFlavor: 'バニラ味', capacity: '500g', price: 1800, imageUrl: 'https://placehold.co/150x150/B0C4DE/FFFFFF?text=Protein', alt: 'Protein Powder' },
-                { id: 'p24', brand: 'TravelBuddy', englishName: 'Travel Adapter', name: '旅行用変換アダプター', englishFlavor: 'Universal', japaneseFlavor: 'ユニバーサル', capacity: '個', price: 750, imageUrl: 'https://placehold.co/150x150/6495ED/FFFFFF?text=Adapter', alt: 'Travel Adapter' },
-                { id: 'p25', brand: 'KidsFun', englishName: 'Building Blocks', name: '積み木', englishFlavor: 'Wooden Set', japaneseFlavor: '木製セット', capacity: '50ピース', price: 1500, imageUrl: 'https://placehold.co/150x150/8B0000/FFFFFF?text=Blocks', alt: 'Building Blocks' },
-                { id: 'p26', brand: 'KitchenAid', englishName: 'Digital Kitchen Scale', name: 'デジタルキッチンスケール', englishFlavor: 'High Precision', japaneseFlavor: '高精度', capacity: '個', price: 1100, imageUrl: 'https://placehold.co/150x150/808080/FFFFFF?text=Scale', alt: 'Digital Kitchen Scale' },
-                { id: 'p27', brand: 'DeskMate', englishName: 'Ergonomic Mouse', name: 'エルゴノミクスマウス', englishFlavor: 'Wireless', japaneseFlavor: 'ワイヤレス', capacity: '個', price: 2300, imageUrl: 'https://placehold.co/150x150/BDB76B/000000?text=Mouse', alt: 'Ergonomic Mouse' },
-                { id: 'p28', brand: 'OutdoorGear', englishName: 'Camping Lantern', name: 'キャンプランタン', english: 'LED Light', japaneseFlavor: 'LEDライト', capacity: '個', price: 900, imageUrl: 'https://placehold.co/150x150/ADD8E6/000000?text=Lantern', alt: 'Camping Lantern' },
-                { id: 'p29', brand: 'FashionWear', englishName: 'Cotton Socks', name: 'コットンソックス', englishFlavor: 'Assorted Colors', japaneseFlavor: 'アソートカラー', capacity: '3足セット', price: 450, imageUrl: 'https://placehold.co/150x150/F08080/FFFFFF?text=Socks', alt: 'Cotton Socks' },
-                { id: 'p30', brand: 'HomeScent', englishName: 'Candle Set', name: 'キャンドルセット', englishFlavor: 'Lavender Scent', japaneseFlavor: 'ラベンダーの香り', capacity: '3個セット', price: 1600, imageUrl: 'https://placehold.co/150x150/DDA0DD/FFFFFF?text=Candle', alt: 'Candle Set' },
             ];
 
             const productGrid = document.getElementById('product-grid');
@@ -174,6 +166,10 @@
             const confirmYesBtn = document.getElementById('confirm-yes-btn');
             const confirmNoBtn = document.getElementById('confirm-no-btn');
 
+            // Get new input fields
+            const buyerNameInput = document.getElementById('buyer-name');
+            const messengerNameInput = document.getElementById('messenger-name');
+            const messageToSellerInput = document.getElementById('message-to-seller'); // Get the new message input field
 
             // Dynamically generate product items
             products.forEach(product => {
@@ -347,6 +343,9 @@
             confirmYesBtn.addEventListener('click', () => {
                 // Collect order details
                 const orderDetails = {
+                    buyerName: buyerNameInput.value,        // Get buyer name from input
+                    messengerName: messengerNameInput.value, // Get messenger name from input
+                    messageToSeller: messageToSellerInput.value, // Get message to seller from input
                     items: [],
                     grandTotal: grandTotalElement.textContent // Overall total as currently displayed
                 };
@@ -378,6 +377,14 @@
 
                 // Format order details for email body
                 let emailBody = "Order Details:\n\n";
+                emailBody += `Buyer's Name: ${orderDetails.buyerName}\n`;
+                emailBody += `Facebook Messenger Name: ${orderDetails.messengerName}\n`;
+                // Add message to seller if provided
+                if (orderDetails.messageToSeller) {
+                    emailBody += `Message to Seller: ${orderDetails.messageToSeller}\n`;
+                }
+                emailBody += "\n"; // Add a new line after buyer info and message
+
                 orderDetails.items.forEach(item => {
                     emailBody += `Product ID: ${item.id}\n`;
                     emailBody += `Brand: ${item.brand}\n`;
@@ -392,6 +399,7 @@
                     emailBody += "---\n";
                 });
                 emailBody += `Grand Total: ${orderDetails.grandTotal}\n\n`;
+                emailBody += "Payment Method: Cash only.\n\n"; // Added cash payment info
                 emailBody += "Thank you for your order!";
 
                 // Encode the email body for URL
@@ -424,4 +432,3 @@
     </script>
 </body>
 </html>
-
