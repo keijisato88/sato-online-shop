@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-M-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>オンラインショップカート</title>
+    <!-- Inter フォントの読み込み -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN の読み込み -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Hide scrollbar for Chrome, Safari, Opera */
+        body::-webkit-scrollbar {
+            display: none;
+        }
+        /* Hide scrollbar for IE and Edge */
+        body {
+            -ms-overflow-style: none;
+            /* Hide scrollbar for Firefox */
+            scrollbar-width: none;
+        }
+
+        /* Modal styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-4 min-h-screen flex items-center justify-center">
+    <div class="container bg-white shadow-lg rounded-xl p-8 max-w-7xl mx-auto w-full">
+        <h1 class="text-4xl font-bold text-gray-800 text-center mb-8">
+            <span class="bg-gradient-to-r from-blue-500 to-purple-600 text-transparent bg-clip-text">Order List</span>
+        </h1>
+
+        <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mb-10">
+            <!-- Product items will be dynamically added here by JavaScript -->
+        </div>
+
+        <div class="total-summary bg-blue-50 p-6 rounded-lg shadow-inner flex flex-col items-end">
+            <h2 class="text-3xl font-semibold text-gray-700 mb-2">
+                Grand Total: <span id="grand-total" class="font-bold text-purple-700 ml-2">₱0</span>
+            </h2>
+            <button id="proceed-to-checkout-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">
+                Proceed to Checkout
+            </button>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal Dialog -->
+    <div id="confirmation-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 class="text-2xl font-bold text-gray-800 mb-4">Confirm Order Details</h3>
+            <p class="text-lg text-gray-700 mb-6">
+                Total Amount: <span id="modal-total-amount" class="font-bold text-purple-700 text-2xl">₱0</span>
+            </p>
+            <p class="text-md text-gray-600 mb-8">Do you want to proceed with this order?</p>
+            <div class="flex justify-center space-x-4">
+                <button id="confirm-yes-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-5 rounded-lg shadow-md transition duration-300 ease-in-out">
+                    Yes
+                </button>
+                <button id="confirm-no-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-5 rounded-lg shadow-md transition duration-300 ease-in-out">
+                    No
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOMContentLoaded event listener to execute the script after the HTML content is fully loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            // Product data definition (you can add new products here)
+            const products = [
+                // ラーメン (Ramen)
+                { id: 'p1', brand: 'Maruchan', englishName: 'Seimen Noodles', name: 'マルちゃん正麺', englishFlavor: 'Soy Sauce Flavor', japaneseFlavor: '醤油味', capacity: '105g×5p', price: 350, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/714WCZWisfL.__AC_SX300_SY300_QL70_ML2_.jpg', alt: 'マルちゃん正麺' },
+                { id: 'p2', brand: 'Maruchan', englishName: 'Seimen Noodles', name: 'マルちゃん正麺', englishFlavor: 'Miso Flavor', japaneseFlavor: '味噌味', capacity: '105g×5p', price: 350, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/61Pbh6T-L0L.__AC_SX300_SY300_QL70_ML2_.jpg', alt: 'マルちゃん正麺' },
+                { id: 'p3', brand: '明星', englishName: 'Charumera Miyazaki Karammen', name: '明星チャルメラ 宮崎辛麺', englishFlavor: 'Spicy Soy Sauce', japaneseFlavor: '辛い醤油', capacity: '96g×5p', price: 330, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/714VFfBRNLS._AC_SX679_.jpg', alt: '明星 チャルメラ 宮崎辛麺' },
+                { id: 'p4', brand: '明星', englishName: 'Charumera Barikata Tonkotsu', name: '明星 チャルメラ バリカタ麺豚骨', englishFlavor: 'Hard Noodle Pork Bone', japaneseFlavor: 'バリカタ麺豚骨', capacity: '82g×5p', price: 300, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/811Ux5nVxaL.__AC_SY300_SX300_QL70_ML2_.jpg', alt: '明星 チャルメラ バリカタ麺豚骨' },
+                { id: 'p5', brand: 'Sapporo Ichiban', englishName: 'Miso Ramen Umakara', name: 'サッポロ一番みそラーメン旨辛', englishFlavor: 'Miso Flavor', japaneseFlavor: '味噌味', capacity: '100g×5p', price: 350, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/51iwoXud2iL._AC_.jpg', alt: 'サッポロ一番みそラーメン旨辛 5食パック' },
+                { id: 'p9b', brand: 'Sanyo Foods', englishName: 'Sapporo Ichiban Cupstar Soy Sauce', name: 'サッポロ一番 カップスター 醤油', englishFlavor: 'Soy Sauce', japaneseFlavor: '醤油', capacity: '71g', price: 120, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/61FuaR+7g1L._AC_SY300_SX300_.jpg', alt: 'サッポロ一番 カップスター 醤油' },
+                { id: 'p6', brand: 'Nissin', englishName: 'Cup Noodle Seafood', name: 'カップヌードル シーフードヌードル 日清食品', englishFlavor: 'Seafood Flavor', japaneseFlavor: 'シーフード味', capacity: '75g×1p', price: 100, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71sJYeS6vBL.__AC_SX300_SY300_QL70_ML2_.jpg', alt: 'カップヌードル シーフードヌードル 日清食品' },
+                { id: 'p7', brand: 'Nissin', englishName: 'Cup Noodle Seafood (20pc)', name: 'カップヌードル シーフードヌードル 日清食品', englishFlavor: 'Seafood Flavor', japaneseFlavor: 'シーフード味', capacity: '75g×20p', price: 1950, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71sJYeS6vBL.__AC_SX300_SY300_QL70_ML2_.jpg', alt: 'カップヌードル シーフードヌードル 日清食品' },
+                { id: 'p7a', brand: 'Nissin', englishName: 'Cup Noodle Seafood Light', name: 'カップヌードル シーフードライト', englishFlavor: 'Light Seafood Flavor', japaneseFlavor: 'あっさりシーフードの味', capacity: '60g', price: 80, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71xsZj8WpdL.__AC_SX300_SY300_QL70_ML2_.jpg', alt: 'カップヌードル シーフードライト' },
+                { id: 'p7b', brand: 'Nissin', englishName: 'Cup Noodle Seafood Light (20pc)', name: 'カップヌードル シーフードライト (20P)', englishFlavor: 'Light Seafood Flavor', japaneseFlavor: 'あっさりシーフードの味', capacity: '60g×20p', price: 1550, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71xsZj8WpdL.__AC_SX300_SY300_QL70_ML2_.jpg', alt: 'カップヌードル シーフードライト 20P' },
+                { id: 'p6a', brand: 'Nissin', englishName: 'Cup Noodle Regular', name: 'カップヌードル レギュラー', englishFlavor: 'Original', japaneseFlavor: 'オリジナル', capacity: '78g', price: 100, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71+DV-+cRUL._AC_SX679_PIbundle-20,TopRight,0,0_SH20_.jpg', alt: 'カップヌードル レギュラー' },
+
+                // お菓子 (Sweets/Snacks)
+                { id: 'p8a', brand: 'Meiji', englishName: 'Milk Chocolate Bag', name: '明治 ミルクチョコレート袋', englishFlavor: 'Milk Chocolate', japaneseFlavor: 'ミルクチョコレート', capacity: '80g (approx. 20 pcs)', price: 250, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/51ZJRV6FssL.__AC_SX300_SY300_QL70_ML2_.jpg', alt: '明治 ミルクチョコレート袋' },
+                { id: 'p9a', brand: 'Meiji', englishName: 'Chocolate Effect Large Bag 72% Cacao', name: '明治 チョコレート効果 大袋 72％', englishFlavor: 'Bitter 72% Cacao', japaneseFlavor: 'ビター72%カカオ', capacity: '225g (45pc)', price: 700, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71urDKKMTIL._AC_SX679_.jpg', alt: '明治 チョコレート効果 大袋 72%' },
+                { id: 'p9c', brand: 'Meiji', englishName: 'Chocolate Effect Cacao 72%', name: '明治 チョコレート効果カカオ７２％', englishFlavor: 'Cacao 72%', japaneseFlavor: 'カカオ72%', capacity: '65g', price: 200, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71Va4CpQaYL._AC_SX679_.jpg', alt: '明治 チョコレート効果カカオ７２％ 65g' },
+                { id: 'p8b', brand: 'Meito Sangyo', englishName: 'Alphabet Chocolate', name: '名糖産業 アルファベットチョコレート', englishFlavor: 'Chocolate', japaneseFlavor: 'チョコレート', capacity: '123g', price: 250, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/81-2R5x-+NL._AC_SX679_.jpg', alt: '名糖産業 アルファベットチョコレート' },
+                { id: 'p8c', brand: 'Meito Sangyo', englishName: 'Alphabet Chocolate', name: '名糖産業 アルファベットチョコレート', englishFlavor: 'Chocolate', japaneseFlavor: 'チョコレート', capacity: '1kg (approx. 179 pcs)', price: 1500, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/81-2R5x-+NL._AC_SX679_.jpg', alt: '名糖産業 アルファベットチョコレート 1kg' },
+                { id: 'p10a', brand: 'Nestle', englishName: 'Kit Kat', name: 'ネスレ KKT キットカット', englishFlavor: 'Original', japaneseFlavor: 'オリジナル', capacity: '10 sheets', price: 200, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/711VM9Cv2TL._AC_SX679_.jpg', alt: 'ネスレ KKT キットカット 10枚' },
+                { id: 'p10b', brand: 'Nestle Japan', englishName: 'Kit Kat Otona no Amasa', name: 'ネスレ日本 キットカット オトナの甘さ', englishFlavor: 'Adult Sweetness', japaneseFlavor: 'オトナの甘さ', capacity: '10 sheets', price: 200, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71alFUNQvSL._AC_SX679_.jpg', alt: 'ネスレ日本 キットカット オトナの甘さ 10枚' },
+                { id: 'p10c', brand: 'Nestle', englishName: 'Kit Kat Ito En Matcha Latte Flavor', name: 'ネスレ キットカット 伊藤園 抹茶ラテ味', englishFlavor: 'Matcha Latte', japaneseFlavor: '抹茶ラテ', capacity: '10 sheets', price: 220, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/814mJFtzSeL._AC_SX679_.jpg', alt: 'ネスレ キットカット 伊藤園 抹茶ラテ味 10枚' },
+                { id: 'p10d', brand: 'Nestle Japan', englishName: 'Kit Kat Strawberry', name: 'ネスレ日本 キットカット 苺', englishFlavor: 'Strawberry', japaneseFlavor: '苺', capacity: '10 sheets', price: 200, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/81rb9J0mLjL._AC_SX679_.jpg', alt: 'ネスレ日本 キットカット 苺 10枚' },
+
+                // その他日用品 (Other Daily Necessities)
+                { id: 'p9d', brand: 'Yamamoto Kampo Pharmaceutical', englishName: 'Aojiru Barley Grass 100%', name: '山本漢方製薬 青汁 大麦若葉100%', englishFlavor: 'Additive-free', japaneseFlavor: '無添加', capacity: '88 packets of 3g', price: 1150, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71--ia2xNsL._AC_SX679_PIbundle-88,TopRight,0,0_SH20_.jpg', alt: '山本漢方製薬 青汁 大麦若葉100% 3g×88包 無添加' },
+                { id: 'p10g', brand: 'DHC', englishName: 'DHC Collagen 60 Days', name: 'DHC コラーゲン', englishFlavor: 'Unflavored', japaneseFlavor: '無香料', capacity: '360 tablets for 60 days', price: 600, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/61qoevkqBtL.__AC_SX300_SY300_QL70_ML2_.jpg', alt: 'DHC コラーゲン 60日分 360粒' },
+                { id: 'p10h', brand: 'DHC', englishName: 'DHC Vitamin C (Hard Capsule) 60 Days', name: 'DHC ビタミンC(ハードカプセル)', englishFlavor: 'Unflavored', japaneseFlavor: '無香料', capacity: '120 capsules for 60 days', price: 250, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71TcbloOn5L._AC_SY879_.jpg', alt: 'DHC ビタミンC(ハードカプセル) 60日分 120粒' },
+                { id: 'p10i', brand: 'Morihan', englishName: 'Organic Uji Matcha Green Tea', name: '森半 有機宇治抹茶', englishFlavor: 'Organic Matcha', japaneseFlavor: '有機抹茶', capacity: '30g bag', price: 450, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/612l9i+MO+L._AC_SX679_.jpg', alt: '森半 有機宇治抹茶 30ｇ袋入り' },
+                { id: 'p10j', brand: 'Orihiro', englishName: 'Night Diet Tea', name: 'オリヒロ ナイトダイエットティー', englishFlavor: 'Unflavored', japaneseFlavor: '無香料', capacity: '20 packets of 2g', price: 320, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/61eoJCZ8EbL._AC_SY879_PIbundle-20,TopRight,0,0_SH20_.jpg', alt: 'オリヒロ ナイトダイエットティー 2g×20包' },
+                { id: 'p10e', brand: 'Cow Brand Soap', englishName: 'Cow Brand Red Box Soap', name: '牛乳石鹸 カウブランド 赤箱', englishFlavor: 'Original Scent', japaneseFlavor: 'オリジナル', capacity: '3 pieces of 90g', price: 200, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/61zgLvNtImL._AC_SX679_.jpg', alt: '牛乳石鹸 カウブランド 赤箱 90グラム×3個入り' },
+                { id: 'p10f', brand: 'Cow Brand Soap', englishName: 'Cow Brand Blue Box Soap', name: '牛乳石鹸 カウブランド 青箱', englishFlavor: 'Refreshing Scent', japaneseFlavor: 'さわやか', capacity: '3 pieces of 85g', price: 200, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/61CYBSex0uL._AC_SX679_.jpg', alt: '牛乳石鹸 カウブランド 青箱 85g×3個入り' },
+                { id: 'p8', brand: 'PixelPerfect', englishName: 'Compact Camera', name: 'コンパクトカメラ', englishFlavor: '4K Video', japaneseFlavor: '4K動画対応', capacity: '個', price: 35000, imageUrl: 'https://placehold.co/150x150/A7A7D7/FFFFFF?text=Camera', alt: 'コンパクトカメラ' },
+                { id: 'p9', brand: 'GamerPro', englishName: 'Gaming Keyboard', englishFlavor: 'RGB Backlit', japaneseFlavor: 'RGBバックライト', capacity: '個', price: 9500, imageUrl: 'https://placehold.co/150x150/8D8DE0/FFFFFF?text=Keyboard', alt: 'ゲーミングキーボード' },
+                { id: 'p10', brand: 'AquaPure', englishName: 'Eco-Friendly Bottle', name: 'エコフレンドリーボトル', englishFlavor: 'BPA Free', japaneseFlavor: 'BPAフリー', capacity: '500ml', price: 1800, imageUrl: 'https://placehold.co/150x150/70A3D9/FFFFFF?text=Bottle', alt: 'エコフレンドリーボトル' },
+                // --- Additional 20 placeholder products start here ---
+                { id: 'p11', brand: 'BrandX', englishName: 'Gaming Headset', name: 'ゲーミングヘッドセット', englishFlavor: 'Surround Sound', japaneseFlavor: 'サラウンドサウンド', capacity: '1個', price: 4500, imageUrl: 'https://placehold.co/150x150/FF6347/FFFFFF?text=Headset', alt: 'Gaming Headset' },
+                { id: 'p12', brand: 'EcoLiving', englishName: 'Bamboo Toothbrush', name: '竹歯ブラシ', englishFlavor: 'Soft Bristle', japaneseFlavor: 'やわらか毛', capacity: '4本パック', price: 250, imageUrl: 'https://placehold.co/150x150/5F9EA0/FFFFFF?text=Toothbrush', alt: 'Bamboo Toothbrush' },
+                { id: 'p13', brand: 'FitGear', englishName: 'Resistance Bands Set', name: 'レジスタンスバンドセット', englishFlavor: 'Multi-level', japaneseFlavor: '多段階レベル', capacity: '5本セット', price: 1200, imageUrl: 'https://placehold.co/150x150/CD5C5C/FFFFFF?text=Bands', alt: 'Resistance Bands Set' },
+                { id: 'p14', brand: 'ArtCraft', englishName: 'Sketchbook A4', name: 'スケッチブックA4', englishFlavor: 'Acid-Free Paper', japaneseFlavor: '中性紙', capacity: '1冊', price: 400, imageUrl: 'https://placehold.co/150x150/6A5ACD/FFFFFF?text=Sketchbook', alt: 'Sketchbook A4' },
+                { id: 'p15', brand: 'CookMaster', englishName: 'Silicone Spatula', name: 'シリコンヘラ', englishFlavor: 'Heat Resistant', japaneseFlavor: '耐熱性', capacity: '個', price: 150, imageUrl: 'https://placehold.co/150x150/FFD700/000000?text=Spatula', alt: 'Silicone Spatula' },
+                { id: 'p16', brand: 'HomeComfort', englishName: 'Memory Foam Pillow', name: '低反発枕', englishFlavor: 'Ergonomic Design', japaneseFlavor: '人間工学設計', capacity: '個', price: 2800, imageUrl: 'https://placehold.co/150x150/8B4513/FFFFFF?text=Pillow', alt: 'Memory Foam Pillow' },
+                { id: 'p17', brand: 'CleanLife', englishName: 'Microfiber Cleaning Cloths', name: 'マイクロファイバークロス', englishFlavor: 'Multi-purpose', japaneseFlavor: '多目的', capacity: '6枚組', price: 380, imageUrl: 'https://placehold.co/150x150/00CED1/FFFFFF?text=Cloth', alt: 'Microfiber Cleaning Cloths' },
+                { id: 'p18', brand: 'PetPal', englishName: 'Dog Chew Toy', name: '犬用噛むおもちゃ', englishFlavor: 'Durable Rubber', japaneseFlavor: '耐久性ラバー', capacity: '個', price: 700, imageUrl: 'https://placehold.co/150x150/DAA520/FFFFFF?text=Toy', alt: 'Dog Chew Toy' },
+                { id: 'p19', brand: 'GreenThumb', englishName: 'Gardening Gloves', name: 'ガーデニング手袋', englishFlavor: 'Waterproof', japaneseFlavor: '防水', capacity: '1組', price: 550, imageUrl: 'https://placehold.co/150x150/32CD32/FFFFFF?text=Gloves', alt: 'Gardening Gloves' },
+                { id: 'p20', brand: 'TechGadget', englishName: 'USB-C Hub', name: 'USB-Cハブ', englishFlavor: 'Multi-port', japaneseFlavor: 'マルチポート', capacity: '個', price: 2100, imageUrl: 'https://placehold.co/150x150/4682B4/FFFFFF?text=USBHub', alt: 'USB-C Hub' },
+                { id: 'p21', brand: 'SweetDelight', englishName: 'Assorted Chocolates', name: 'アソートチョコレート', englishFlavor: 'Variety Pack', japaneseFlavor: 'バラエティパック', capacity: '200g', price: 950, imageUrl: 'https://placehold.co/150x150/D8BFD8/000000?text=Chocolates', alt: 'Assorted Chocolates' },
+                { id: 'p22', brand: 'BrewMaster', englishName: 'Coffee Beans', name: 'コーヒー豆', englishFlavor: 'Medium Roast', japaneseFlavor: '中煎り', capacity: '250g', price: 600, imageUrl: 'https://placehold.co/150x150/A0522D/FFFFFF?text=Coffee', alt: 'Coffee Beans' },
+                { id: 'p23', brand: 'HealthyChoice', englishName: 'Protein Powder', name: 'プロテインパウダー', englishFlavor: 'Vanilla Flavor', japaneseFlavor: 'バニラ味', capacity: '500g', price: 1800, imageUrl: 'https://placehold.co/150x150/B0C4DE/FFFFFF?text=Protein', alt: 'Protein Powder' },
+                { id: 'p24', brand: 'TravelBuddy', englishName: 'Travel Adapter', name: '旅行用変換アダプター', englishFlavor: 'Universal', japaneseFlavor: 'ユニバーサル', capacity: '個', price: 750, imageUrl: 'https://placehold.co/150x150/6495ED/FFFFFF?text=Adapter', alt: 'Travel Adapter' },
+                { id: 'p25', brand: 'KidsFun', englishName: 'Building Blocks', name: '積み木', englishFlavor: 'Wooden Set', japaneseFlavor: '木製セット', capacity: '50ピース', price: 1500, imageUrl: 'https://placehold.co/150x150/8B0000/FFFFFF?text=Blocks', alt: 'Building Blocks' },
+                { id: 'p26', brand: 'KitchenAid', englishName: 'Digital Kitchen Scale', name: 'デジタルキッチンスケール', englishFlavor: 'High Precision', japaneseFlavor: '高精度', capacity: '個', price: 1100, imageUrl: 'https://placehold.co/150x150/808080/FFFFFF?text=Scale', alt: 'Digital Kitchen Scale' },
+                { id: 'p27', brand: 'DeskMate', englishName: 'Ergonomic Mouse', name: 'エルゴノミクスマウス', englishFlavor: 'Wireless', japaneseFlavor: 'ワイヤレス', capacity: '個', price: 2300, imageUrl: 'https://placehold.co/150x150/BDB76B/000000?text=Mouse', alt: 'Ergonomic Mouse' },
+                { id: 'p28', brand: 'OutdoorGear', englishName: 'Camping Lantern', name: 'キャンプランタン', english: 'LED Light', japaneseFlavor: 'LEDライト', capacity: '個', price: 900, imageUrl: 'https://placehold.co/150x150/ADD8E6/000000?text=Lantern', alt: 'Camping Lantern' },
+                { id: 'p29', brand: 'FashionWear', englishName: 'Cotton Socks', name: 'コットンソックス', englishFlavor: 'Assorted Colors', japaneseFlavor: 'アソートカラー', capacity: '3足セット', price: 450, imageUrl: 'https://placehold.co/150x150/F08080/FFFFFF?text=Socks', alt: 'Cotton Socks' },
+                { id: 'p30', brand: 'HomeScent', englishName: 'Candle Set', name: 'キャンドルセット', englishFlavor: 'Lavender Scent', japaneseFlavor: 'ラベンダーの香り', capacity: '3個セット', price: 1600, imageUrl: 'https://placehold.co/150x150/DDA0DD/FFFFFF?text=Candle', alt: 'Candle Set' },
+            ];
+
+            const productGrid = document.getElementById('product-grid');
+            const grandTotalElement = document.getElementById('grand-total');
+
+            // Get modal-related elements
+            const proceedToCheckoutBtn = document.getElementById('proceed-to-checkout-btn');
+            const confirmationModal = document.getElementById('confirmation-modal');
+            const modalTotalAmount = document.getElementById('modal-total-amount');
+            const confirmYesBtn = document.getElementById('confirm-yes-btn');
+            const confirmNoBtn = document.getElementById('confirm-no-btn');
+
+
+            // Dynamically generate product items
+            products.forEach(product => {
+                const productItem = document.createElement('div');
+                productItem.classList.add(
+                    'product-item',
+                    'bg-white',
+                    'rounded-lg',
+                    'shadow-md',
+                    'p-4',
+                    'text-center',
+                    'flex',
+                    'flex-col',
+                    'items-center',
+                    'justify-between',
+                    'transform',
+                    'transition',
+                    'duration-300',
+                    'hover:scale-105',
+                    'hover:shadow-xl'
+                );
+                productItem.dataset.price = product.price; // Store unit price as a data attribute
+
+                // Display product image
+                const img = document.createElement('img');
+                img.src = product.imageUrl;
+                img.alt = product.alt;
+                // Fallback if image fails to load
+                img.onerror = function() {
+                    this.src = `https://placehold.co/150x150/CCCCCC/666666?text=No+Image`;
+                };
+
+                // Apply square and slightly larger image styles
+                // Changed object-cover to object-contain for soap, collagen, Kit Kat, Matcha, and Diet Tea images
+                if (['p9d', 'p10e', 'p10f', 'p10g', 'p10h', 'p10a', 'p10b', 'p10c', 'p10d', 'p10i', 'p10j'].includes(product.id)) {
+                    img.classList.add('w-32', 'h-32', 'object-contain', 'mb-3', 'border-2', 'border-gray-200', 'rounded-md');
+                } else {
+                    img.classList.add('w-32', 'h-32', 'object-cover', 'mb-3', 'border-2', 'border-gray-200', 'rounded-md');
+                }
+                productItem.appendChild(img);
+
+                // Display brand name (top)
+                const brandName = document.createElement('p');
+                // Set brand name to dark gray
+                brandName.classList.add('text-sm', 'font-medium', 'text-gray-700', 'mb-0');
+                brandName.textContent = product.brand;
+                productItem.appendChild(brandName);
+
+                // Display English product name (second)
+                const englishName = document.createElement('p');
+                // Set English product name to blue
+                englishName.classList.add('text-base', 'font-semibold', 'text-blue-700', 'mb-1');
+                englishName.textContent = product.englishName;
+                productItem.appendChild(englishName);
+
+                // Display Japanese product name (third, adjusted existing one)
+                const name = document.createElement('p');
+                // Set Japanese product name to black
+                name.classList.add('text-lg', 'font-bold', 'text-gray-900', 'mb-1');
+                name.textContent = product.name;
+                productItem.appendChild(name);
+
+                // Display English flavor (fourth)
+                const englishFlavor = document.createElement('p');
+                // Set English flavor to light gray
+                englishFlavor.classList.add('text-sm', 'text-gray-500', 'mb-0');
+                englishFlavor.textContent = product.englishFlavor;
+                productItem.appendChild(englishFlavor);
+
+                // Display Japanese flavor (fifth)
+                const japaneseFlavor = document.createElement('p');
+                // Set Japanese flavor to green
+                japaneseFlavor.classList.add('text-base', 'font-medium', 'text-green-700', 'mb-1');
+                japaneseFlavor.textContent = product.japaneseFlavor;
+                productItem.appendChild(japaneseFlavor);
+
+                // Display capacity (sixth)
+                const capacity = document.createElement('p');
+                // Set capacity to purple
+                capacity.classList.add('text-sm', 'text-purple-700', 'mb-2');
+                capacity.textContent = product.capacity;
+                productItem.appendChild(capacity);
+
+                // Display price
+                const price = document.createElement('p');
+                price.classList.add('text-xl', 'font-bold', 'text-blue-600', 'mb-2');
+                // Display price in Philippine Peso format
+                price.textContent = `₱${product.price.toLocaleString('en-PH', { minimumFractionDigits: 2 })}`;
+                productItem.appendChild(price);
+
+                // Create quantity selection dropdown
+                const quantityControl = document.createElement('div');
+                quantityControl.classList.add('flex', 'items-center', 'justify-center', 'gap-2', 'mb-3');
+                const quantityLabel = document.createElement('label');
+                quantityLabel.htmlFor = `quantity-${product.id}`;
+                quantityLabel.classList.add('text-gray-600');
+                quantityLabel.textContent = 'Quantity:'; // Changed from '個数:' to 'Quantity:'
+                quantityControl.appendChild(quantityLabel);
+
+                const quantitySelect = document.createElement('select');
+                quantitySelect.id = `quantity-${product.id}`;
+                quantitySelect.classList.add(
+                    'quantity-select',
+                    'p-2',
+                    'border',
+                    'border-gray-300',
+                    'rounded-md',
+                    'focus:ring-blue-500',
+                    'focus:border-blue-500',
+                    'outline-none'
+                );
+                for (let i = 0; i <= 5; i++) { // Selectable from 0 to 5
+                    const option = document.createElement('option');
+                    option.value = i;
+                    option.textContent = i;
+                    quantitySelect.appendChild(option);
+                }
+                quantityControl.appendChild(quantitySelect);
+                productItem.appendChild(quantityControl);
+
+                // Display subtotal
+                const subtotal = document.createElement('p');
+                subtotal.classList.add('subtotal', 'text-xl', 'font-bold', 'text-green-600', 'mt-auto'); // Position at bottom with mt-auto
+                subtotal.textContent = `Subtotal: ₱0.00`; // Changed from '小計:' to 'Subtotal:'
+                productItem.appendChild(subtotal);
+
+                productGrid.appendChild(productItem);
+            });
+
+            /**
+             * Calculates the subtotal and grand total of all products and updates the display.
+             */
+            function calculateTotal() {
+                let grandTotal = 0; // Initialize grand total
+
+                // Get all product items
+                const allProductItems = document.querySelectorAll('.product-item');
+
+                allProductItems.forEach(item => {
+                    // Get unit price from data attribute and convert to number
+                    const price = parseFloat(item.dataset.price);
+                    // Get quantity selected from dropdown and convert to integer
+                    const quantitySelect = item.querySelector('.quantity-select');
+                    const quantity = parseInt(quantitySelect.value);
+                    // Get element to display subtotal
+                    const subtotalElement = item.querySelector('.subtotal');
+
+                    // Calculate individual product subtotal
+                    const subtotal = price * quantity;
+                    // Update subtotal display (format with toLocaleString() for Philippine Peso)
+                    subtotalElement.textContent = `Subtotal: ₱${subtotal.toLocaleString('en-PH', { minimumFractionDigits: 2 })}`; // Changed '小計:' to 'Subtotal:'
+
+                    // Add subtotal to grand total
+                    grandTotal += subtotal;
+                });
+
+                // Update grand total display (format with toLocaleString() for Philippine Peso)
+                grandTotalElement.textContent = `₱${grandTotal.toLocaleString('en-PH', { minimumFractionDigits: 2 })}`;
+            }
+
+            // --- Modal related JavaScript added ---
+
+            // Handle "Proceed to Checkout" button click
+            proceedToCheckoutBtn.addEventListener('click', () => {
+                const currentTotal = grandTotalElement.textContent; // Get current grand total text
+                modalTotalAmount.textContent = currentTotal; // Update amount in modal
+                confirmationModal.classList.add('active'); // Display modal
+            });
+
+            // Handle "Yes" button click in modal
+            confirmYesBtn.addEventListener('click', () => {
+                // Collect order details
+                const orderDetails = {
+                    items: [],
+                    grandTotal: grandTotalElement.textContent // Overall total as currently displayed
+                };
+
+                // Loop through each product to get selected quantity and details
+                products.forEach(product => {
+                    // Find the corresponding product item element. Using product.id to select the correct element is more robust.
+                    const quantitySelect = document.querySelector(`#quantity-${product.id}`);
+                    if (quantitySelect) {
+                        const quantity = parseInt(quantitySelect.value);
+
+                        if (quantity > 0) { // Only add items that have a quantity greater than 0
+                            const itemSubtotal = product.price * quantity;
+                            orderDetails.items.push({
+                                id: product.id,
+                                brand: product.brand,
+                                englishName: product.englishName,
+                                name: product.name,
+                                englishFlavor: product.englishFlavor,
+                                japaneseFlavor: product.japaneseFlavor,
+                                capacity: product.capacity,
+                                unitPrice: product.price,
+                                quantity: quantity,
+                                subtotal: itemSubtotal
+                            });
+                        }
+                    }
+                });
+
+                // Format order details for email body
+                let emailBody = "Order Details:\n\n";
+                orderDetails.items.forEach(item => {
+                    emailBody += `Product ID: ${item.id}\n`;
+                    emailBody += `Brand: ${item.brand}\n`;
+                    emailBody += `English Name: ${item.englishName}\n`;
+                    emailBody += `Japanese Name: ${item.name}\n`;
+                    emailBody += `English Flavor: ${item.englishFlavor}\n`;
+                    emailBody += `Japanese Flavor: ${item.japaneseFlavor}\n`;
+                    emailBody += `Capacity: ${item.capacity}\n`;
+                    emailBody += `Unit Price: ₱${item.unitPrice.toLocaleString('en-PH', { minimumFractionDigits: 2 })}\n`;
+                    emailBody += `Quantity: ${item.quantity}\n`;
+                    emailBody += `Subtotal: ₱${item.subtotal.toLocaleString('en-PH', { minimumFractionDigits: 2 })}\n`;
+                    emailBody += "---\n";
+                });
+                emailBody += `Grand Total: ${orderDetails.grandTotal}\n\n`;
+                emailBody += "Thank you for your order!";
+
+                // Encode the email body for URL
+                const encodedEmailBody = encodeURIComponent(emailBody);
+                const recipientEmail = "jsmarketing.sato@gmail.com"; // ★★★ ここにあなたのメールアドレスが設定されます ★★★
+                const emailSubject = encodeURIComponent("New Order from Online Shop");
+
+                // Open default email client
+                window.location.href = `mailto:${recipientEmail}?subject=${emailSubject}&body=${encodedEmailBody}`;
+
+                confirmationModal.classList.remove('active'); // Hide modal
+                console.log("Order confirmed! Email client should open."); // For debugging
+            });
+
+            // Handle "No" button click in modal
+            confirmNoBtn.addEventListener('click', () => {
+                confirmationModal.classList.remove('active'); // Hide modal
+                console.log("Order cancelled."); // For debugging
+            });
+
+            // --- Initialization processing ---
+            // Add event listener to all quantity selection dropdowns
+            document.querySelectorAll('.quantity-select').forEach(selectElement => {
+                selectElement.addEventListener('change', calculateTotal);
+            });
+
+            // Calculate and display initial total amount when page loads
+            calculateTotal();
+        });
+    </script>
+</body>
+</html>
+
