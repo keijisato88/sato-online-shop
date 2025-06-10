@@ -98,13 +98,16 @@
                 <label for="messenger-name" class="block text-md text-gray-700 font-medium mb-1 text-left">Facebook Messenger Name (Facebookメッセンジャーの名前):</label>
                 <input type="text" id="messenger-name" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none" placeholder="Messenger Name">
             </div>
-            <!-- New input field for message to seller -->
+            <!-- Input field for message to seller -->
             <div class="mb-6">
                 <label for="message-to-seller" class="block text-md text-gray-700 font-medium mb-1 text-left">Message to Seller (お店へのメッセージ):</label>
                 <textarea id="message-to-seller" rows="3" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none resize-y" placeholder="Optional message..."></textarea>
             </div>
 
-            <p class="text-md text-gray-600 mb-8 font-semibold">Cash payment only.</p> <!-- Cash payment information -->
+            <!-- New delivery information - made more prominent -->
+            <p class="text-xl text-blue-700 my-4 font-extrabold">Next delivery is scheduled for mid-July.</p>
+            <!-- Cash payment information - made more prominent -->
+            <p class="text-xl text-red-700 my-4 font-extrabold">Cash payment only.</p>
             <p class="text-md text-gray-600 mb-8">Do you want to proceed with this order?</p>
             <div class="flex justify-center space-x-4">
                 <button id="confirm-yes-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-5 rounded-lg shadow-md transition duration-300 ease-in-out">
@@ -154,6 +157,15 @@
                 { id: 'p10j', brand: 'Orihiro', englishName: 'Night Diet Tea', name: 'オリヒロ ナイトダイエットティー', englishFlavor: 'Unflavored', japaneseFlavor: '無香料', capacity: '20 packets of 2g', price: 320, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/61eoJCZ8EbL._AC_SY879_PIbundle-20,TopRight,0,0_SH20_.jpg', alt: 'オリヒロ ナイトダイエットティー 2g×20包' },
                 { id: 'p10e', brand: 'Cow Brand Soap', englishName: 'Cow Brand Red Box Soap', name: '牛乳石鹸 カウブランド 赤箱', englishFlavor: 'Original Scent', japaneseFlavor: 'オリジナル', capacity: '3 pieces of 90g', price: 200, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/61zgLvNtImL._AC_SX679_.jpg', alt: '牛乳石鹸 カウブランド 赤箱 90グラム×3個入り' },
                 { id: 'p10f', brand: 'Cow Brand Soap', englishName: 'Cow Brand Blue Box Soap', name: '牛乳石鹸 カウブランド 青箱', englishFlavor: 'Refreshing Scent', japaneseFlavor: 'さわやか', capacity: '3 pieces of 85g', price: 200, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/61CYBSex0uL._AC_SX679_.jpg', alt: '牛乳石鹸 カウブランド 青箱 85g×3個入り' },
+                { id: 'p31', brand: 'Nagatanien', englishName: 'Instant Miso Soup Asage', name: '永谷園 生タイプみそ汁 あさげ', englishFlavor: 'Miso Flavor', japaneseFlavor: '味噌味', capacity: '10 servings', price: 220, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/81eFvZU9A7L._AC_SL1500_.jpg', alt: '永谷園 生タイプみそ汁 あさげ 徳用10食入' },
+                { id: 'p32', brand: 'Nagatanien', englishName: 'Instant Miso Soup Hiruge', name: '永谷園 生みそタイプみそ汁 ひるげ', englishFlavor: 'Red Miso Flavor', japaneseFlavor: '赤みそ味', capacity: '10 servings', price: 220, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71xKyAyjl3L._AC_SL1500_.jpg', alt: '永谷園 生みそタイプみそ汁 ひるげ 徳用 10食入' },
+                { id: 'p33', brand: 'Marumiya', englishName: 'Noritama (Furikake)', name: '丸美屋 のりたま（ふりかけ）', englishFlavor: 'Large Bag', japaneseFlavor: '大袋', capacity: '52g', price: 120, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71+KYbtR43L._AC_SY879_.jpg', alt: '丸美屋 のりたま（ふりかけ） 大袋 52g' },
+                { id: 'p34', brand: 'Marumiya', englishName: 'Sukiyaki (Furikake)', name: '丸美屋 すきやき（ふりかけ）', englishFlavor: 'Large Bag', japaneseFlavor: '大袋', capacity: '70g', price: 120, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71v-kzqdLLL._AC_SY879_.jpg', alt: '丸美屋 すきやき（ふりかけ） 大袋 70g' },
+                { id: 'p35', brand: 'Marumiya', englishName: 'Aji Douraku (Furikake)', name: '丸美屋 味道楽（ふりかけ）', englishFlavor: 'Large Bag', japaneseFlavor: '大袋', capacity: '52g', price: 120, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71ShCS1FCZL._AC_SY879_.jpg', alt: '丸美屋 味道楽（ふりかけ） 大袋 52g' },
+                { id: 'p36', brand: 'Nagatanien', englishName: 'Ochaduke Nori', name: '永谷園 お茶づけ海苔', englishFlavor: 'Nori Flavor', japaneseFlavor: '海苔味', capacity: '8 servings', price: 210, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71b0vlWX-8L._AC_SL1500_.jpg', alt: '永谷園 お茶づけ海苔 8袋入' },
+                { id: 'p37', brand: 'Nagatanien', englishName: 'Ochaduke Salmon', name: '永谷園 さけ茶づけ', englishFlavor: 'Salmon Flavor', japaneseFlavor: '鮭味', capacity: '6 servings', price: 210, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71Ve4nDwYIL._AC_SY879_.jpg', alt: '永谷園 さけ茶づけ 6袋入' },
+                { id: 'p38', brand: 'S&B Foods', englishName: 'Golden Curry', name: 'ゴールデンカレー', englishFlavor: 'Hot', japaneseFlavor: '辛口', capacity: '198g', price: 200, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/815KsT-8UjS._AC_SX679_.jpg', alt: 'エスビー食品 ゴールデンカレー 辛口 198g' },
+                { id: 'p39', brand: 'S&B Foods', englishName: 'Golden Curry', name: 'ゴールデンカレー', englishFlavor: 'Medium Hot', japaneseFlavor: '中辛', capacity: '198g', price: 200, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/81cVhN6YWpS._AC_SL1500_.jpg', alt: 'エスビー食品 ゴールデンカレー 中辛 198g' },
             ];
 
             const productGrid = document.getElementById('product-grid');
@@ -203,8 +215,8 @@
                 };
 
                 // Apply square and slightly larger image styles
-                // Changed object-cover to object-contain for soap, collagen, Kit Kat, Matcha, and Diet Tea images
-                if (['p9d', 'p10e', 'p10f', 'p10g', 'p10h', 'p10a', 'p10b', 'p10c', 'p10d', 'p10i', 'p10j'].includes(product.id)) {
+                // Changed object-cover to object-contain for soap, collagen, Kit Kat, Matcha, Diet Tea, and Miso Soup images
+                if (['p9d', 'p10e', 'p10f', 'p10g', 'p10h', 'p10a', 'p10b', 'p10c', 'p10d', 'p10i', 'p10j', 'p31', 'p32', 'p33', 'p34', 'p35', 'p36', 'p37', 'p38', 'p39'].includes(product.id)) {
                     img.classList.add('w-32', 'h-32', 'object-contain', 'mb-3', 'border-2', 'border-gray-200', 'rounded-md');
                 } else {
                     img.classList.add('w-32', 'h-32', 'object-cover', 'mb-3', 'border-2', 'border-gray-200', 'rounded-md');
@@ -399,6 +411,7 @@
                     emailBody += "---\n";
                 });
                 emailBody += `Grand Total: ${orderDetails.grandTotal}\n\n`;
+                emailBody += "Next delivery is scheduled for mid-July.\n\n"; // Added delivery info
                 emailBody += "Payment Method: Cash only.\n\n"; // Added cash payment info
                 emailBody += "Thank you for your order!";
 
