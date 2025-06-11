@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-M-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>オンラインショップカート</title>
+    <title>Shopping Cart</title>
     <!-- Inter フォントの読み込み -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Tailwind CSS CDN の読み込み -->
@@ -64,12 +64,57 @@
 </head>
 <body class="bg-gray-100 p-4 min-h-screen flex items-center justify-center">
     <div class="container bg-white shadow-lg rounded-xl p-8 max-w-7xl mx-auto w-full">
-        <h1 class="text-4xl font-bold text-gray-800 text-center mb-8">
-            <span class="bg-gradient-to-r from-blue-500 to-purple-600 text-transparent bg-clip-text">Order List</span>
+        <h1 class="text-4xl font-bold text-gray-800 text-center mb-2">
+            <span class="bg-gradient-to-r from-blue-500 to-purple-600 text-transparent bg-clip-text">Shopping Cart</span>
         </h1>
+        <!-- Message for delivery and packaging -->
+        <p class="text-center text-sm text-gray-500 italic mb-4">
+            The ordered items will be brought during the next trip to the Philippines. Packaging may vary.
+        </p>
 
-        <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mb-10">
-            <!-- Product items will be dynamically added here by JavaScript -->
+        <!-- Product Request Section -->
+        <div class="product-request-section bg-gray-50 p-6 rounded-lg shadow-inner mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 text-center mb-4">Product Request</h2>
+            <p class="text-center text-gray-700 mb-4">If you want a product not listed, please provide a photo and comments. We will check the price for you.</p>
+            <div class="flex flex-col gap-4">
+                <div>
+                    <label for="request-comment" class="block text-md text-gray-700 font-medium mb-1">Comment:</label>
+                    <textarea id="request-comment" rows="3" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none resize-y" placeholder="e.g., Matcha Kit Kat, or details about the product you are looking for..."></textarea>
+                </div>
+                <div>
+                    <label for="request-photo" class="block text-md text-gray-700 font-medium mb-1">Photo:</label>
+                    <input type="file" id="request-photo" accept="image/*" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none">
+                    <p class="text-xs text-gray-500 mt-1">※ Please manually attach the photo to the email after submitting.</p>
+                </div>
+                <button id="request-submit-btn" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">
+                    Request Product
+                </button>
+            </div>
+        </div>
+
+        <!-- Category Navigation -->
+        <nav class="sticky top-0 bg-white z-50 shadow-md py-3 mb-6 rounded-b-xl">
+            <ul class="flex justify-center space-x-4 md:space-x-8 overflow-x-auto px-4 pb-2">
+                <li><a href="#food-section" class="category-link text-blue-600 hover:text-purple-700 font-semibold text-lg md:text-xl whitespace-nowrap p-2 rounded-lg transition duration-200 hover:bg-blue-100">食品 (Food)</a></li>
+                <li><a href="#sweets-section" class="category-link text-blue-600 hover:text-purple-700 font-semibold text-lg md:text-xl whitespace-nowrap p-2 rounded-lg transition duration-200 hover:bg-blue-100">お菓子 (Sweets)</a></li>
+                <li><a href="#beverages-section" class="category-link text-blue-600 hover:text-purple-700 font-semibold text-lg md:text-xl whitespace-nowrap p-2 rounded-lg transition duration-200 hover:bg-blue-100">飲料 (Beverages)</a></li>
+                <li><a href="#daily-necessities-section" class="category-link text-blue-600 hover:text-purple-700 font-semibold text-lg md:text-xl whitespace-nowrap p-2 rounded-lg transition duration-200 hover:bg-blue-100">生活雑貨 (Daily)</a></li>
+            </ul>
+        </nav>
+
+        <!-- Product Sections by Category -->
+        <div id="product-sections">
+            <h2 id="food-section" class="text-3xl font-bold text-gray-800 text-center mb-6 pt-4 mt-8">食品 (Food)</h2>
+            <div id="food-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mb-10"></div>
+
+            <h2 id="sweets-section" class="text-3xl font-bold text-gray-800 text-center mb-6 pt-4 mt-8">お菓子 (Sweets)</h2>
+            <div id="sweets-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mb-10"></div>
+
+            <h2 id="beverages-section" class="text-3xl font-bold text-gray-800 text-center mb-6 pt-4 mt-8">飲料 (Beverages)</h2>
+            <div id="beverages-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mb-10"></div>
+
+            <h2 id="daily-necessities-section" class="text-3xl font-bold text-gray-800 text-center mb-6 pt-4 mt-8">生活雑貨 (Daily Necessities)</h2>
+            <div id="daily-necessities-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mb-10"></div>
         </div>
 
         <div class="total-summary bg-blue-50 p-6 rounded-lg shadow-inner flex flex-col items-end">
@@ -123,52 +168,63 @@
     <script>
         // DOMContentLoaded event listener to execute the script after the HTML content is fully loaded
         document.addEventListener('DOMContentLoaded', () => {
-            // Product data definition (you can add new products here)
+            // Product data definition with category assignments
             const products = [
-                // ラーメン (Ramen)
-                { id: 'p1', brand: 'Maruchan', englishName: 'Seimen Noodles', name: 'マルちゃん正麺', englishFlavor: 'Soy Sauce Flavor', japaneseFlavor: '醤油味', capacity: '105g×5p', price: 350, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/714WCZWisfL.__AC_SX300_SY300_QL70_ML2_.jpg', alt: 'マルちゃん正麺' },
-                { id: 'p2', brand: 'Maruchan', englishName: 'Seimen Noodles', name: 'マルちゃん正麺', englishFlavor: 'Miso Flavor', japaneseFlavor: '味噌味', capacity: '105g×5p', price: 350, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/61Pbh6T-L0L.__AC_SX300_SY300_QL70_ML2_.jpg', alt: 'マルちゃん正麺' },
-                { id: 'p3', brand: '明星', englishName: 'Charumera Miyazaki Karammen', name: '明星チャルメラ 宮崎辛麺', englishFlavor: 'Spicy Soy Sauce', japaneseFlavor: '辛い醤油', capacity: '96g×5p', price: 330, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/714VFfBRNLS._AC_SX679_.jpg', alt: '明星 チャルメラ 宮崎辛麺' },
-                { id: 'p4', brand: '明星', englishName: 'Charumera Barikata Tonkotsu', name: '明星 チャルメラ バリカタ麺豚骨', englishFlavor: 'Hard Noodle Pork Bone', japaneseFlavor: 'バリカタ麺豚骨', capacity: '82g×5p', price: 300, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/811Ux5nVxaL.__AC_SY300_SX300_QL70_ML2_.jpg', alt: '明星 チャルメラ バリカタ麺豚骨' },
-                { id: 'p5', brand: 'Sapporo Ichiban', englishName: 'Miso Ramen Umakara', name: 'サッポロ一番みそラーメン旨辛', englishFlavor: 'Miso Flavor', japaneseFlavor: '味噌味', capacity: '100g×5p', price: 350, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/51iwoXud2iL._AC_.jpg', alt: 'サッポロ一番みそラーメン旨辛 5食パック' },
-                { id: 'p9b', brand: 'Sanyo Foods', englishName: 'Sapporo Ichiban Cupstar Soy Sauce', name: 'サッポロ一番 カップスター 醤油', englishFlavor: 'Soy Sauce', japaneseFlavor: '醤油', capacity: '71g', price: 120, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/61FuaR+7g1L._AC_SY300_SX300_.jpg', alt: 'サッポロ一番 カップスター 醤油' },
-                { id: 'p6', brand: 'Nissin', englishName: 'Cup Noodle Seafood', name: 'カップヌードル シーフードヌードル 日清食品', englishFlavor: 'Seafood Flavor', japaneseFlavor: 'シーフード味', capacity: '75g×1p', price: 100, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71sJYeS6vBL.__AC_SX300_SY300_QL70_ML2_.jpg', alt: 'カップヌードル シーフードヌードル 日清食品' },
-                { id: 'p7', brand: 'Nissin', englishName: 'Cup Noodle Seafood (20pc)', name: 'カップヌードル シーフードヌードル 日清食品', englishFlavor: 'Seafood Flavor', japaneseFlavor: 'シーフード味', capacity: '75g×20p', price: 1950, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71sJYeS6vBL.__AC_SX300_SY300_QL70_ML2_.jpg', alt: 'カップヌードル シーフードヌードル 日清食品' },
-                { id: 'p7a', brand: 'Nissin', englishName: 'Cup Noodle Seafood Light', name: 'カップヌードル シーフードライト', englishFlavor: 'Light Seafood Flavor', japaneseFlavor: 'あっさりシーフードの味', capacity: '60g', price: 80, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71xsZj8WpdL.__AC_SX300_SY300_QL70_ML2_.jpg', alt: 'カップヌードル シーフードライト' },
-                { id: 'p7b', brand: 'Nissin', englishName: 'Cup Noodle Seafood Light (20pc)', name: 'カップヌードル シーフードライト (20P)', englishFlavor: 'Light Seafood Flavor', japaneseFlavor: 'あっさりシーフードの味', capacity: '60g×20p', price: 1550, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71xsZj8WpdL.__AC_SX300_SY300_QL70_ML2_.jpg', alt: 'カップヌードル シーフードライト 20P' },
-                { id: 'p6a', brand: 'Nissin', englishName: 'Cup Noodle Regular', name: 'カップヌードル レギュラー', englishFlavor: 'Original', japaneseFlavor: 'オリジナル', capacity: '78g', price: 100, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71+DV-+cRUL._AC_SX679_PIbundle-20,TopRight,0,0_SH20_.jpg', alt: 'カップヌードル レギュラー' },
+                // ラーメン (Ramen) - Category: Food
+                { id: 'p1', brand: 'Maruchan', englishName: 'Seimen Noodles', name: 'マルちゃん正麺', englishFlavor: 'Soy Sauce Flavor', japaneseFlavor: '醤油味', capacity: '105g×5p', price: 350, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/714WCZWisfL.__AC_SX300_SY300_QL70_ML2_.jpg', alt: 'マルちゃん正麺', category: 'food' },
+                { id: 'p2', brand: 'Maruchan', englishName: 'Seimen Noodles', name: 'マルちゃん正麺', englishFlavor: 'Miso Flavor', japaneseFlavor: '味噌味', capacity: '105g×5p', price: 350, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/61Pbh6T-L0L.__AC_SX300_SY300_QL70_ML2_.jpg', alt: 'マルちゃん正麺', category: 'food' },
+                { id: 'p3', brand: '明星', englishName: 'Charumera Miyazaki Karammen', name: '明星チャルメラ 宮崎辛麺', englishFlavor: 'Spicy Soy Sauce', japaneseFlavor: '辛い醤油', capacity: '96g×5p', price: 330, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/714VFfBRNLS._AC_SX679_.jpg', alt: '明星 チャルメラ 宮崎辛麺', category: 'food' },
+                { id: 'p4', brand: '明星', englishName: 'Charumera Barikata Tonkotsu', name: '明星 チャルメラ バリカタ麺豚骨', englishFlavor: 'Hard Noodle Pork Bone', japaneseFlavor: 'バリカタ麺豚骨', capacity: '82g×5p', price: 300, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/811Ux5nVxaL.__AC_SY300_SX300_QL70_ML2_.jpg', alt: '明星 チャルメラ バリカタ麺豚骨', category: 'food' },
+                { id: 'p5', brand: 'Sapporo Ichiban', englishName: 'Miso Ramen Umakara', name: 'サッポロ一番みそラーメン旨辛', englishFlavor: 'Miso Flavor', japaneseFlavor: '味噌味', capacity: '100g×5p', price: 350, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/51iwoXud2iL._AC_.jpg', alt: 'サッポロ一番みそラーメン旨辛 5食パック', category: 'food' },
+                { id: 'p9b', brand: 'Sanyo Foods', englishName: 'Sapporo Ichiban Cupstar Soy Sauce', name: 'サッポロ一番 カップスター 醤油', englishFlavor: 'Soy Sauce', japaneseFlavor: '醤油', capacity: '71g', price: 120, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/61FuaR+7g1L._AC_SY300_SX300_.jpg', alt: 'サッポロ一番 カップスター 醤油', category: 'food' },
+                { id: 'p6', brand: 'Nissin', englishName: 'Cup Noodle Seafood', name: 'カップヌードル シーフードヌードル 日清食品', englishFlavor: 'Seafood Flavor', japaneseFlavor: 'シーフード味', capacity: '75g×1p', price: 100, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71sJYeS6vBL.__AC_SX300_SY300_QL70_ML2_.jpg', alt: 'カップヌードル シーフードヌードル 日清食品', category: 'food' },
+                { id: 'p7', brand: 'Nissin', englishName: 'Cup Noodle Seafood (20pc)', name: 'カップヌードル シーフードヌードル 日清食品', englishFlavor: 'Seafood Flavor', japaneseFlavor: 'シーフード味', capacity: '75g×20p', price: 1950, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71sJYeS6vBL.__AC_SX300_SY300_QL70_ML2_.jpg', alt: 'カップヌードル シーフードヌードル 日清食品', category: 'food' },
+                { id: 'p7a', brand: 'Nissin', englishName: 'Cup Noodle Seafood Light', name: 'カップヌードル シーフードライト', englishFlavor: 'Light Seafood Flavor', japaneseFlavor: 'あっさりシーフードの味', capacity: '60g', price: 80, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71xsZj8WpdL.__AC_SX300_SY300_QL70_ML2_.jpg', alt: 'カップヌードル シーフードライト', category: 'food' },
+                { id: 'p7b', brand: 'Nissin', englishName: 'Cup Noodle Seafood Light (20pc)', name: 'カップヌードル シーフードライト (20P)', englishFlavor: 'Light Seafood Flavor', japaneseFlavor: 'あっさりシーフードの味', capacity: '60g×20p', price: 1550, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71xsZj8WpdL.__AC_SX300_SY300_QL70_ML2_.jpg', alt: 'カップヌードル シーフードライト 20P', category: 'food' },
+                { id: 'p6a', brand: 'Nissin', englishName: 'Cup Noodle Regular', name: 'カップヌードル レギュラー', englishFlavor: 'Original', japaneseFlavor: 'オリジナル', capacity: '78g', price: 100, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71+DV-+cRUL._AC_SX679_PIbundle-20,TopRight,0,0_SH20_.jpg', alt: 'カップヌードル レギュラー', category: 'food' },
 
-                // お菓子 (Sweets/Snacks)
-                { id: 'p8a', brand: 'Meiji', englishName: 'Milk Chocolate Bag', name: '明治 ミルクチョコレート袋', englishFlavor: 'Milk Chocolate', japaneseFlavor: 'ミルクチョコレート', capacity: '80g (approx. 20 pcs)', price: 250, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/51ZJRV6FssL.__AC_SX300_SY300_QL70_ML2_.jpg', alt: '明治 ミルクチョコレート袋' },
-                { id: 'p9a', brand: 'Meiji', englishName: 'Chocolate Effect Large Bag 72% Cacao', name: '明治 チョコレート効果 大袋 72％', englishFlavor: 'Bitter 72% Cacao', japaneseFlavor: 'ビター72%カカオ', capacity: '225g (45pc)', price: 700, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71urDKKMTIL._AC_SX679_.jpg', alt: '明治 チョコレート効果 大袋 72%' },
-                { id: 'p9c', brand: 'Meiji', englishName: 'Chocolate Effect Cacao 72%', name: '明治 チョコレート効果カカオ７２％', englishFlavor: 'Cacao 72%', japaneseFlavor: 'カカオ72%', capacity: '65g', price: 200, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71Va4CpQaYL._AC_SX679_.jpg', alt: '明治 チョコレート効果カカオ７２％ 65g' },
-                { id: 'p8b', brand: 'Meito Sangyo', englishName: 'Alphabet Chocolate', name: '名糖産業 アルファベットチョコレート', englishFlavor: 'Chocolate', japaneseFlavor: 'チョコレート', capacity: '123g', price: 250, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/81-2R5x-+NL._AC_SX679_.jpg', alt: '名糖産業 アルファベットチョコレート' },
-                { id: 'p8c', brand: 'Meito Sangyo', englishName: 'Alphabet Chocolate', name: '名糖産業 アルファベットチョコレート', englishFlavor: 'Chocolate', japaneseFlavor: 'チョコレート', capacity: '1kg (approx. 179 pcs)', price: 1500, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/81-2R5x-+NL._AC_SX679_.jpg', alt: '名糖産業 アルファベットチョコレート 1kg' },
-                { id: 'p10a', brand: 'Nestle', englishName: 'Kit Kat', name: 'ネスレ KKT キットカット', englishFlavor: 'Original', japaneseFlavor: 'オリジナル', capacity: '10 sheets', price: 200, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/711VM9Cv2TL._AC_SX679_.jpg', alt: 'ネスレ KKT キットカット 10枚' },
-                { id: 'p10b', brand: 'Nestle Japan', englishName: 'Kit Kat Otona no Amasa', name: 'ネスレ日本 キットカット オトナの甘さ', englishFlavor: 'Adult Sweetness', japaneseFlavor: 'オトナの甘さ', capacity: '10 sheets', price: 200, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71alFUNQvSL._AC_SX679_.jpg', alt: 'ネスレ日本 キットカット オトナの甘さ 10枚' },
-                { id: 'p10c', brand: 'Nestle', englishName: 'Kit Kat Ito En Matcha Latte Flavor', name: 'ネスレ キットカット 伊藤園 抹茶ラテ味', englishFlavor: 'Matcha Latte', japaneseFlavor: '抹茶ラテ', capacity: '10 sheets', price: 220, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/814mJFtzSeL._AC_SX679_.jpg', alt: 'ネスレ キットカット 伊藤園 抹茶ラテ味 10枚' },
-                { id: 'p10d', brand: 'Nestle Japan', englishName: 'Kit Kat Strawberry', name: 'ネスレ日本 キットカット 苺', englishFlavor: 'Strawberry', japaneseFlavor: '苺', capacity: '10 sheets', price: 200, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/81rb9J0mLjL._AC_SX679_.jpg', alt: 'ネスレ日本 キットカット 苺 10枚' },
+                // ふりかけ・お茶漬け・みそ汁 (Furikake/Ochazuke/Miso Soup) - Category: Food
+                { id: 'p31', brand: 'Nagatanien', englishName: 'Instant Miso Soup Asage', name: '永谷園 生タイプみそ汁 あさげ', englishFlavor: 'Miso Flavor', japaneseFlavor: '味噌味', capacity: '10 servings', price: 220, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/81eFvZU9A7L._AC_SL1500_.jpg', alt: '永谷園 生タイプみそ汁 あさげ 徳用10食入', category: 'food' },
+                { id: 'p32', brand: 'Nagatanien', englishName: 'Instant Miso Soup Hiruge', name: '永谷園 生みそタイプみそ汁 ひるげ', englishFlavor: 'Red Miso Flavor', japaneseFlavor: '赤みそ味', capacity: '10 servings', price: 220, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71xKyAyjl3L._AC_SL1500_.jpg', alt: '永谷園 生みそタイプみそ汁 ひるげ 徳用 10食入', category: 'food' },
+                { id: 'p33', brand: 'Marumiya', englishName: 'Noritama (Furikake)', name: '丸美屋 のりたま（ふりかけ）', englishFlavor: 'Large Bag', japaneseFlavor: '大袋', capacity: '52g', price: 120, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71+KYbtR43L._AC_SY879_.jpg', alt: '丸美屋 のりたま（ふりかけ） 大袋 52g', category: 'food' },
+                { id: 'p34', brand: 'Marumiya', englishName: 'Sukiyaki (Furikake)', name: '丸美屋 すきやき（ふりかけ）', englishFlavor: 'Large Bag', japaneseFlavor: '大袋', capacity: '70g', price: 120, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71v-kzqdLLL._AC_SY879_.jpg', alt: '丸美屋 すきやき（ふりかけ） 大袋 70g', category: 'food' },
+                { id: 'p35', brand: 'Marumiya', englishName: 'Aji Douraku (Furikake)', name: '丸美屋 味道楽（ふりかけ）', englishFlavor: 'Large Bag', japaneseFlavor: '大袋', capacity: '52g', price: 120, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71ShCS1FCZL._AC_SY879_.jpg', alt: '丸美屋 味道楽（ふりかけ） 大袋 52g', category: 'food' },
+                { id: 'p36', brand: 'Nagatanien', englishName: 'Ochaduke Nori', name: '永谷園 お茶づけ海苔', englishFlavor: 'Nori Flavor', japaneseFlavor: '海苔味', capacity: '8 servings', price: 210, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71b0vlWX-8L._AC_SL1500_.jpg', alt: '永谷園 お茶づけ海苔 8袋入', category: 'food' },
+                { id: 'p37', brand: 'Nagatanien', englishName: 'Ochaduke Salmon', name: '永谷園 さけ茶づけ', englishFlavor: 'Salmon Flavor', japaneseFlavor: '鮭味', capacity: '6 servings', price: 210, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71Ve4nDwYIL._AC_SY879_.jpg', alt: '永谷園 さけ茶づけ 6袋入', category: 'food' },
 
-                // その他日用品 (Other Daily Necessities)
-                { id: 'p9d', brand: 'Yamamoto Kampo Pharmaceutical', englishName: 'Aojiru Barley Grass 100%', name: '山本漢方製薬 青汁 大麦若葉100%', englishFlavor: 'Additive-free', japaneseFlavor: '無添加', capacity: '88 packets of 3g', price: 1150, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71--ia2xNsL._AC_SX679_PIbundle-88,TopRight,0,0_SH20_.jpg', alt: '山本漢方製薬 青汁 大麦若葉100% 3g×88包 無添加' },
-                { id: 'p10g', brand: 'DHC', englishName: 'DHC Collagen 60 Days', name: 'DHC コラーゲン', englishFlavor: 'Unflavored', japaneseFlavor: '無香料', capacity: '360 tablets for 60 days', price: 600, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/61qoevkqBtL.__AC_SX300_SY300_QL70_ML2_.jpg', alt: 'DHC コラーゲン 60日分 360粒' },
-                { id: 'p10h', brand: 'DHC', englishName: 'DHC Vitamin C (Hard Capsule) 60 Days', name: 'DHC ビタミンC(ハードカプセル)', englishFlavor: 'Unflavored', japaneseFlavor: '無香料', capacity: '120 capsules for 60 days', price: 250, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71TcbloOn5L._AC_SY879_.jpg', alt: 'DHC ビタミンC(ハードカプセル) 60日分 120粒' },
-                { id: 'p10i', brand: 'Morihan', englishName: 'Organic Uji Matcha Green Tea', name: '森半 有機宇治抹茶', englishFlavor: 'Organic Matcha', japaneseFlavor: '有機抹茶', capacity: '30g bag', price: 450, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/612l9i+MO+L._AC_SX679_.jpg', alt: '森半 有機宇治抹茶 30ｇ袋入り' },
-                { id: 'p10j', brand: 'Orihiro', englishName: 'Night Diet Tea', name: 'オリヒロ ナイトダイエットティー', englishFlavor: 'Unflavored', japaneseFlavor: '無香料', capacity: '20 packets of 2g', price: 320, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/61eoJCZ8EbL._AC_SY879_PIbundle-20,TopRight,0,0_SH20_.jpg', alt: 'オリヒロ ナイトダイエットティー 2g×20包' },
-                { id: 'p10e', brand: 'Cow Brand Soap', englishName: 'Cow Brand Red Box Soap', name: '牛乳石鹸 カウブランド 赤箱', englishFlavor: 'Original Scent', japaneseFlavor: 'オリジナル', capacity: '3 pieces of 90g', price: 200, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/61zgLvNtImL._AC_SX679_.jpg', alt: '牛乳石鹸 カウブランド 赤箱 90グラム×3個入り' },
-                { id: 'p10f', brand: 'Cow Brand Soap', englishName: 'Cow Brand Blue Box Soap', name: '牛乳石鹸 カウブランド 青箱', englishFlavor: 'Refreshing Scent', japaneseFlavor: 'さわやか', capacity: '3 pieces of 85g', price: 200, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/61CYBSex0uL._AC_SX679_.jpg', alt: '牛乳石鹸 カウブランド 青箱 85g×3個入り' },
-                { id: 'p31', brand: 'Nagatanien', englishName: 'Instant Miso Soup Asage', name: '永谷園 生タイプみそ汁 あさげ', englishFlavor: 'Miso Flavor', japaneseFlavor: '味噌味', capacity: '10 servings', price: 220, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/81eFvZU9A7L._AC_SL1500_.jpg', alt: '永谷園 生タイプみそ汁 あさげ 徳用10食入' },
-                { id: 'p32', brand: 'Nagatanien', englishName: 'Instant Miso Soup Hiruge', name: '永谷園 生みそタイプみそ汁 ひるげ', englishFlavor: 'Red Miso Flavor', japaneseFlavor: '赤みそ味', capacity: '10 servings', price: 220, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71xKyAyjl3L._AC_SL1500_.jpg', alt: '永谷園 生みそタイプみそ汁 ひるげ 徳用 10食入' },
-                { id: 'p33', brand: 'Marumiya', englishName: 'Noritama (Furikake)', name: '丸美屋 のりたま（ふりかけ）', englishFlavor: 'Large Bag', japaneseFlavor: '大袋', capacity: '52g', price: 120, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71+KYbtR43L._AC_SY879_.jpg', alt: '丸美屋 のりたま（ふりかけ） 大袋 52g' },
-                { id: 'p34', brand: 'Marumiya', englishName: 'Sukiyaki (Furikake)', name: '丸美屋 すきやき（ふりかけ）', englishFlavor: 'Large Bag', japaneseFlavor: '大袋', capacity: '70g', price: 120, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71v-kzqdLLL._AC_SY879_.jpg', alt: '丸美屋 すきやき（ふりかけ） 大袋 70g' },
-                { id: 'p35', brand: 'Marumiya', englishName: 'Aji Douraku (Furikake)', name: '丸美屋 味道楽（ふりかけ）', englishFlavor: 'Large Bag', japaneseFlavor: '大袋', capacity: '52g', price: 120, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71ShCS1FCZL._AC_SY879_.jpg', alt: '丸美屋 味道楽（ふりかけ） 大袋 52g' },
-                { id: 'p36', brand: 'Nagatanien', englishName: 'Ochaduke Nori', name: '永谷園 お茶づけ海苔', englishFlavor: 'Nori Flavor', japaneseFlavor: '海苔味', capacity: '8 servings', price: 210, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71b0vlWX-8L._AC_SL1500_.jpg', alt: '永谷園 お茶づけ海苔 8袋入' },
-                { id: 'p37', brand: 'Nagatanien', englishName: 'Ochaduke Salmon', name: '永谷園 さけ茶づけ', englishFlavor: 'Salmon Flavor', japaneseFlavor: '鮭味', capacity: '6 servings', price: 210, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71Ve4nDwYIL._AC_SY879_.jpg', alt: '永谷園 さけ茶づけ 6袋入' },
-                { id: 'p38', brand: 'S&B Foods', englishName: 'Golden Curry', name: 'ゴールデンカレー', englishFlavor: 'Hot', japaneseFlavor: '辛口', capacity: '198g', price: 200, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/815KsT-8UjS._AC_SX679_.jpg', alt: 'エスビー食品 ゴールデンカレー 辛口 198g' },
-                { id: 'p39', brand: 'S&B Foods', englishName: 'Golden Curry', name: 'ゴールデンカレー', englishFlavor: 'Medium Hot', japaneseFlavor: '中辛', capacity: '198g', price: 200, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/81cVhN6YWpS._AC_SL1500_.jpg', alt: 'エスビー食品 ゴールデンカレー 中辛 198g' },
+                // カレー (Curry) - Category: Food
+                { id: 'p38', brand: 'S&B Foods', englishName: 'Golden Curry', name: 'ゴールデンカレー', englishFlavor: 'Hot', japaneseFlavor: '辛口', capacity: '198g', price: 200, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/815KsT-8UjS._AC_SX679_.jpg', alt: 'エスビー食品 ゴールデンカレー 辛口 198g', category: 'food' },
+                { id: 'p39', brand: 'S&B Foods', englishName: 'Golden Curry', name: 'ゴールデンカレー', englishFlavor: 'Medium Hot', japaneseFlavor: '中辛', capacity: '198g', price: 200, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/81cVhN6YWpS._AC_SL1500_.jpg', alt: 'エスビー食品 ゴールデンカレー 中辛 198g', category: 'food' },
+
+                // お菓子 (Sweets/Snacks) - Category: Sweets
+                { id: 'p8a', brand: 'Meiji', englishName: 'Milk Chocolate Bag', name: '明治 ミルクチョコレート袋', englishFlavor: 'Milk Chocolate', japaneseFlavor: 'ミルクチョコレート', capacity: '80g (approx. 20 pcs)', price: 250, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/51ZJRV6FssL.__AC_SX300_SY300_QL70_ML2_.jpg', alt: '明治 ミルクチョコレート袋', category: 'sweets' },
+                { id: 'p9a', brand: 'Meiji', englishName: 'Chocolate Effect Large Bag 72% Cacao', name: '明治 チョコレート効果 大袋 72％', englishFlavor: 'Bitter 72% Cacao', japaneseFlavor: 'ビター72%カカオ', capacity: '225g (45pc)', price: 700, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71urDKKMTIL._AC_SX679_.jpg', alt: '明治 チョコレート効果 大袋 72%', category: 'sweets' },
+                { id: 'p9c', brand: 'Meiji', englishName: 'Chocolate Effect Cacao 72%', name: '明治 チョコレート効果カカオ７２％', englishFlavor: 'Cacao 72%', japaneseFlavor: 'カカオ72%', capacity: '65g', price: 200, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71Va4CpQaYL._AC_SX679_.jpg', alt: '明治 チョコレート効果カカオ７２％ 65g', category: 'sweets' },
+                { id: 'p8b', brand: 'Meito Sangyo', englishName: 'Alphabet Chocolate', name: '名糖産業 アルファベットチョコレート', englishFlavor: 'Chocolate', japaneseFlavor: 'チョコレート', capacity: '123g', price: 250, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/81-2R5x-+NL._AC_SX679_.jpg', alt: '名糖産業 アルファベットチョコレート', category: 'sweets' },
+                { id: 'p8c', brand: 'Meito Sangyo', englishName: 'Alphabet Chocolate', name: '名糖産業 アルファベットチョコレート', englishFlavor: 'Chocolate', japaneseFlavor: 'チョコレート', capacity: '1kg (approx. 179 pcs)', price: 1500, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/81-2R5x-+NL._AC_SX679_.jpg', alt: '名糖産業 アルファベットチョコレート 1kg', category: 'sweets' },
+                { id: 'p10a', brand: 'Nestle', englishName: 'Kit Kat', name: 'ネスレ KKT キットカット', englishFlavor: 'Original', japaneseFlavor: 'オリジナル', capacity: '10 sheets', price: 200, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/711VM9Cv2TL._AC_SX679_.jpg', alt: 'ネスレ KKT キットカット 10枚', category: 'sweets' },
+                { id: 'p10b', brand: 'Nestle Japan', englishName: 'Kit Kat Otona no Amasa', name: 'ネスレ日本 キットカット オトナの甘さ', englishFlavor: 'Adult Sweetness', japaneseFlavor: 'オトナの甘さ', capacity: '10 sheets', price: 200, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71alFUNQvSL._AC_SX679_.jpg', alt: 'ネスレ日本 キットカット オトナの甘さ 10枚', category: 'sweets' },
+                { id: 'p10c', brand: 'Nestle', englishName: 'Kit Kat Ito En Matcha Latte Flavor', name: 'ネスレ キットカット 伊藤園 抹茶ラテ味', englishFlavor: 'Matcha Latte', japaneseFlavor: '抹茶ラテ', capacity: '10 sheets', price: 220, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/814mJFtzSeL._AC_SX679_.jpg', alt: 'ネスレ キットカット 伊藤園 抹茶ラテ味 10枚', category: 'sweets' },
+                { id: 'p10d', brand: 'Nestle Japan', englishName: 'Kit Kat Strawberry', name: 'ネスレ日本 キットカット 苺', englishFlavor: 'Strawberry', japaneseFlavor: '苺', capacity: '10 sheets', price: 200, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/81rb9J0mLjL._AC_SX679_.jpg', alt: 'ネスレ日本 キットカット 苺 10枚', category: 'sweets' },
+
+                // 飲料 (Beverages) - Category: Beverages
+                { id: 'p9d', brand: 'Yamamoto Kampo Pharmaceutical', englishName: 'Aojiru Barley Grass 100%', name: '山本漢方製薬 青汁 大麦若葉100%', englishFlavor: 'Additive-free', japaneseFlavor: '無添加', capacity: '88 packets of 3g', price: 1150, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71--ia2xNsL._AC_SX679_PIbundle-88,TopRight,0,0_SH20_.jpg', alt: '山本漢方製薬 青汁 大麦若葉100% 3g×88包 無添加', category: 'beverages' },
+                { id: 'p10i', brand: 'Morihan', englishName: 'Organic Uji Matcha Green Tea', name: '森半 有機宇治抹茶', englishFlavor: 'Organic Matcha', japaneseFlavor: '有機抹茶', capacity: '30g bag', price: 450, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/612l9i+MO+L._AC_SX679_.jpg', alt: '森半 有機宇治抹茶 30ｇ袋入り', category: 'beverages' },
+                { id: 'p10j', brand: 'Orihiro', englishName: 'Night Diet Tea', name: 'オリヒロ ナイトダイエットティー', englishFlavor: 'Unflavored', japaneseFlavor: '無香料', capacity: '20 packets of 2g', price: 320, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/61eoJCZ8EbL._AC_SY879_PIbundle-20,TopRight,0,0_SH20_.jpg', alt: 'オリヒロ ナイトダイエットティー 2g×20包', category: 'beverages' },
+
+                // その他日用品 (Daily Necessities) - Category: Daily Necessities
+                { id: 'p10g', brand: 'DHC', englishName: 'DHC Collagen 60 Days', name: 'DHC コラーゲン', englishFlavor: 'Unflavored', japaneseFlavor: '無香料', capacity: '360 tablets for 60 days', price: 600, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/61qoevkqBtL.__AC_SX300_SY300_QL70_ML2_.jpg', alt: 'DHC コラーゲン 60日分 360粒', category: 'daily-necessities' },
+                { id: 'p10h', brand: 'DHC', englishName: 'DHC Vitamin C (Hard Capsule) 60 Days', name: 'DHC ビタミンC(ハードカプセル)', englishFlavor: 'Unflavored', japaneseFlavor: '無香料', capacity: '120 capsules for 60 days', price: 250, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/71TcbloOn5L._AC_SY879_.jpg', alt: 'DHC ビタミンC(ハードカプセル) 60日分 120粒', category: 'daily-necessities' },
+                { id: 'p10e', brand: 'Cow Brand Soap', englishName: 'Cow Brand Red Box Soap', name: '牛乳石鹸 カウブランド 赤箱', englishFlavor: 'Original Scent', japaneseFlavor: 'オリジナル', capacity: '3 pieces of 90g', price: 200, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/61zgLvNtImL._AC_SX679_.jpg', alt: '牛乳石鹸 カウブランド 赤箱 90グラム×3個入り', category: 'daily-necessities' },
+                { id: 'p10f', brand: 'Cow Brand Soap', englishName: 'Cow Brand Blue Box Soap', name: '牛乳石鹸 カウブランド 青箱', englishFlavor: 'Refreshing Scent', japaneseFlavor: 'さわやか', capacity: '3 pieces of 85g', price: 200, imageUrl: 'https://m.media-amazon.com/images/W/MEDIAX_1215821-T1/images/I/61CYBSex0uL._AC_SX679_.jpg', alt: '牛乳石鹸 カウブランド 青箱 85g×3個入り', category: 'daily-necessities' },
             ];
 
-            const productGrid = document.getElementById('product-grid');
+            // Get references to grid containers
+            const foodGrid = document.getElementById('food-grid');
+            const sweetsGrid = document.getElementById('sweets-grid');
+            const beveragesGrid = document.getElementById('beverages-grid');
+            const dailyNecessitiesGrid = document.getElementById('daily-necessities-grid');
+
             const grandTotalElement = document.getElementById('grand-total');
 
             // Get modal-related elements
@@ -178,13 +234,22 @@
             const confirmYesBtn = document.getElementById('confirm-yes-btn');
             const confirmNoBtn = document.getElementById('confirm-no-btn');
 
-            // Get new input fields
+            // Get new input fields for order confirmation
             const buyerNameInput = document.getElementById('buyer-name');
             const messengerNameInput = document.getElementById('messenger-name');
-            const messageToSellerInput = document.getElementById('message-to-seller'); // Get the new message input field
+            const messageToSellerInput = document.getElementById('message-to-seller');
 
-            // Dynamically generate product items
-            products.forEach(product => {
+            // Get elements for product request form
+            const requestCommentInput = document.getElementById('request-comment');
+            const requestPhotoInput = document.getElementById('request-photo');
+            const requestSubmitBtn = document.getElementById('request-submit-btn');
+
+            /**
+             * Creates and returns a product item HTML element.
+             * @param {Object} product - The product object containing its details.
+             * @returns {HTMLElement} The created product item element.
+             */
+            function createProductItem(product) {
                 const productItem = document.createElement('div');
                 productItem.classList.add(
                     'product-item',
@@ -205,80 +270,62 @@
                 );
                 productItem.dataset.price = product.price; // Store unit price as a data attribute
 
-                // Display product image
                 const img = document.createElement('img');
                 img.src = product.imageUrl;
                 img.alt = product.alt;
-                // Fallback if image fails to load
                 img.onerror = function() {
                     this.src = `https://placehold.co/150x150/CCCCCC/666666?text=No+Image`;
                 };
 
-                // Apply square and slightly larger image styles
-                // Changed object-cover to object-contain for soap, collagen, Kit Kat, Matcha, Diet Tea, and Miso Soup images
-                if (['p9d', 'p10e', 'p10f', 'p10g', 'p10h', 'p10a', 'p10b', 'p10c', 'p10d', 'p10i', 'p10j', 'p31', 'p32', 'p33', 'p34', 'p35', 'p36', 'p37', 'p38', 'p39'].includes(product.id)) {
+                // Apply object-contain for specific product types (miso, furikake, tea, supplements, soap)
+                if (['p31', 'p32', 'p33', 'p34', 'p35', 'p36', 'p37', 'p9d', 'p10i', 'p10j', 'p10g', 'p10h', 'p10e', 'p10f', 'p38', 'p39'].includes(product.id)) {
                     img.classList.add('w-32', 'h-32', 'object-contain', 'mb-3', 'border-2', 'border-gray-200', 'rounded-md');
                 } else {
                     img.classList.add('w-32', 'h-32', 'object-cover', 'mb-3', 'border-2', 'border-gray-200', 'rounded-md');
                 }
                 productItem.appendChild(img);
 
-                // Display brand name (top)
                 const brandName = document.createElement('p');
-                // Set brand name to dark gray
                 brandName.classList.add('text-sm', 'font-medium', 'text-gray-700', 'mb-0');
                 brandName.textContent = product.brand;
                 productItem.appendChild(brandName);
 
-                // Display English product name (second)
                 const englishName = document.createElement('p');
-                // Set English product name to blue
                 englishName.classList.add('text-base', 'font-semibold', 'text-blue-700', 'mb-1');
                 englishName.textContent = product.englishName;
                 productItem.appendChild(englishName);
 
-                // Display Japanese product name (third, adjusted existing one)
                 const name = document.createElement('p');
-                // Set Japanese product name to black
                 name.classList.add('text-lg', 'font-bold', 'text-gray-900', 'mb-1');
                 name.textContent = product.name;
                 productItem.appendChild(name);
 
-                // Display English flavor (fourth)
                 const englishFlavor = document.createElement('p');
-                // Set English flavor to light gray
                 englishFlavor.classList.add('text-sm', 'text-gray-500', 'mb-0');
                 englishFlavor.textContent = product.englishFlavor;
                 productItem.appendChild(englishFlavor);
 
-                // Display Japanese flavor (fifth)
                 const japaneseFlavor = document.createElement('p');
-                // Set Japanese flavor to green
                 japaneseFlavor.classList.add('text-base', 'font-medium', 'text-green-700', 'mb-1');
                 japaneseFlavor.textContent = product.japaneseFlavor;
                 productItem.appendChild(japaneseFlavor);
 
-                // Display capacity (sixth)
                 const capacity = document.createElement('p');
-                // Set capacity to purple
                 capacity.classList.add('text-sm', 'text-purple-700', 'mb-2');
                 capacity.textContent = product.capacity;
                 productItem.appendChild(capacity);
 
-                // Display price
                 const price = document.createElement('p');
                 price.classList.add('text-xl', 'font-bold', 'text-blue-600', 'mb-2');
-                // Display price in Philippine Peso format
                 price.textContent = `₱${product.price.toLocaleString('en-PH', { minimumFractionDigits: 2 })}`;
                 productItem.appendChild(price);
 
-                // Create quantity selection dropdown
                 const quantityControl = document.createElement('div');
                 quantityControl.classList.add('flex', 'items-center', 'justify-center', 'gap-2', 'mb-3');
                 const quantityLabel = document.createElement('label');
                 quantityLabel.htmlFor = `quantity-${product.id}`;
                 quantityLabel.classList.add('text-gray-600');
-                quantityLabel.textContent = 'Quantity:'; // Changed from '個数:' to 'Quantity:'
+                quantityLabel.textContent = 'Quantity:';
                 quantityControl.appendChild(quantityLabel);
 
                 const quantitySelect = document.createElement('select');
@@ -293,7 +340,7 @@
                     'focus:border-blue-500',
                     'outline-none'
                 );
-                for (let i = 0; i <= 5; i++) { // Selectable from 0 to 5
+                for (let i = 0; i <= 5; i++) {
                     const option = document.createElement('option');
                     option.value = i;
                     option.textContent = i;
@@ -302,74 +349,74 @@
                 quantityControl.appendChild(quantitySelect);
                 productItem.appendChild(quantityControl);
 
-                // Display subtotal
                 const subtotal = document.createElement('p');
-                subtotal.classList.add('subtotal', 'text-xl', 'font-bold', 'text-green-600', 'mt-auto'); // Position at bottom with mt-auto
-                subtotal.textContent = `Subtotal: ₱0.00`; // Changed from '小計:' to 'Subtotal:'
+                subtotal.classList.add('subtotal', 'text-xl', 'font-bold', 'text-green-600', 'mt-auto');
+                subtotal.textContent = `Subtotal: ₱0.00`;
                 productItem.appendChild(subtotal);
 
-                productGrid.appendChild(productItem);
+                return productItem;
+            }
+
+            // Dynamically populate product items into their respective category grids
+            products.forEach(product => {
+                const productItem = createProductItem(product);
+                if (product.category === 'food') {
+                    foodGrid.appendChild(productItem);
+                } else if (product.category === 'sweets') {
+                    sweetsGrid.appendChild(productItem);
+                } else if (product.category === 'beverages') {
+                    beveragesGrid.appendChild(productItem);
+                } else if (product.category === 'daily-necessities') {
+                    dailyNecessitiesGrid.appendChild(productItem);
+                }
             });
 
             /**
              * Calculates the subtotal and grand total of all products and updates the display.
              */
             function calculateTotal() {
-                let grandTotal = 0; // Initialize grand total
+                let grandTotal = 0;
 
-                // Get all product items
+                // Get all product items from all grids
                 const allProductItems = document.querySelectorAll('.product-item');
 
                 allProductItems.forEach(item => {
-                    // Get unit price from data attribute and convert to number
                     const price = parseFloat(item.dataset.price);
-                    // Get quantity selected from dropdown and convert to integer
                     const quantitySelect = item.querySelector('.quantity-select');
                     const quantity = parseInt(quantitySelect.value);
-                    // Get element to display subtotal
                     const subtotalElement = item.querySelector('.subtotal');
 
-                    // Calculate individual product subtotal
                     const subtotal = price * quantity;
-                    // Update subtotal display (format with toLocaleString() for Philippine Peso)
-                    subtotalElement.textContent = `Subtotal: ₱${subtotal.toLocaleString('en-PH', { minimumFractionDigits: 2 })}`; // Changed '小計:' to 'Subtotal:'
+                    subtotalElement.textContent = `Subtotal: ₱${subtotal.toLocaleString('en-PH', { minimumFractionDigits: 2 })}`;
 
-                    // Add subtotal to grand total
                     grandTotal += subtotal;
                 });
 
-                // Update grand total display (format with toLocaleString() for Philippine Peso)
                 grandTotalElement.textContent = `₱${grandTotal.toLocaleString('en-PH', { minimumFractionDigits: 2 })}`;
             }
 
-            // --- Modal related JavaScript added ---
-
-            // Handle "Proceed to Checkout" button click
+            // --- Modal related JavaScript ---
             proceedToCheckoutBtn.addEventListener('click', () => {
-                const currentTotal = grandTotalElement.textContent; // Get current grand total text
-                modalTotalAmount.textContent = currentTotal; // Update amount in modal
-                confirmationModal.classList.add('active'); // Display modal
+                const currentTotal = grandTotalElement.textContent;
+                modalTotalAmount.textContent = currentTotal;
+                confirmationModal.classList.add('active');
             });
 
-            // Handle "Yes" button click in modal
             confirmYesBtn.addEventListener('click', () => {
-                // Collect order details
                 const orderDetails = {
-                    buyerName: buyerNameInput.value,        // Get buyer name from input
-                    messengerName: messengerNameInput.value, // Get messenger name from input
-                    messageToSeller: messageToSellerInput.value, // Get message to seller from input
+                    buyerName: buyerNameInput.value,
+                    messengerName: messengerNameInput.value,
+                    messageToSeller: messageToSellerInput.value,
                     items: [],
-                    grandTotal: grandTotalElement.textContent // Overall total as currently displayed
+                    grandTotal: grandTotalElement.textContent
                 };
 
-                // Loop through each product to get selected quantity and details
                 products.forEach(product => {
-                    // Find the corresponding product item element. Using product.id to select the correct element is more robust.
                     const quantitySelect = document.querySelector(`#quantity-${product.id}`);
                     if (quantitySelect) {
                         const quantity = parseInt(quantitySelect.value);
 
-                        if (quantity > 0) { // Only add items that have a quantity greater than 0
+                        if (quantity > 0) {
                             const itemSubtotal = product.price * quantity;
                             orderDetails.items.push({
                                 id: product.id,
@@ -387,15 +434,13 @@
                     }
                 });
 
-                // Format order details for email body
                 let emailBody = "Order Details:\n\n";
                 emailBody += `Buyer's Name: ${orderDetails.buyerName}\n`;
                 emailBody += `Facebook Messenger Name: ${orderDetails.messengerName}\n`;
-                // Add message to seller if provided
                 if (orderDetails.messageToSeller) {
                     emailBody += `Message to Seller: ${orderDetails.messageToSeller}\n`;
                 }
-                emailBody += "\n"; // Add a new line after buyer info and message
+                emailBody += "\n";
 
                 orderDetails.items.forEach(item => {
                     emailBody += `Product ID: ${item.id}\n`;
@@ -411,35 +456,70 @@
                     emailBody += "---\n";
                 });
                 emailBody += `Grand Total: ${orderDetails.grandTotal}\n\n`;
-                emailBody += "Next delivery is scheduled for mid-July.\n\n"; // Added delivery info
-                emailBody += "Payment Method: Cash only.\n\n"; // Added cash payment info
+                emailBody += "Next delivery is scheduled for mid-July.\n\n";
+                emailBody += "Payment Method: Cash only.\n\n";
                 emailBody += "Thank you for your order!";
 
-                // Encode the email body for URL
                 const encodedEmailBody = encodeURIComponent(emailBody);
                 const recipientEmail = "jsmarketing.sato@gmail.com"; // ★★★ ここにあなたのメールアドレスが設定されます ★★★
                 const emailSubject = encodeURIComponent("New Order from Online Shop");
 
-                // Open default email client
                 window.location.href = `mailto:${recipientEmail}?subject=${emailSubject}&body=${encodedEmailBody}`;
 
-                confirmationModal.classList.remove('active'); // Hide modal
-                console.log("Order confirmed! Email client should open."); // For debugging
+                confirmationModal.classList.remove('active');
+                console.log("Order confirmed! Email client should open.");
             });
 
-            // Handle "No" button click in modal
             confirmNoBtn.addEventListener('click', () => {
-                confirmationModal.classList.remove('active'); // Hide modal
-                console.log("Order cancelled."); // For debugging
+                confirmationModal.classList.remove('active');
+                console.log("Order cancelled.");
             });
+
+            // --- Smooth Scrolling for Category Links ---
+            document.querySelectorAll('.category-link').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault(); // Prevent default anchor click behavior
+
+                    const targetId = this.getAttribute('href'); // Get the href (e.g., "#food-section")
+                    const targetElement = document.querySelector(targetId); // Get the target element
+
+                    if (targetElement) {
+                        // Scroll smoothly to the target element
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start' // Align the top of the element with the top of the scroll area
+                        });
+                    }
+                });
+            });
+
+            // --- Product Request Form Handling ---
+            requestSubmitBtn.addEventListener('click', () => {
+                const comment = requestCommentInput.value;
+                const fileName = requestPhotoInput.files.length > 0 ? requestPhotoInput.files[0].name : "N/A";
+
+                let requestBody = `Product Request:\n\nComment: ${comment}\n`;
+                requestBody += `Attached Photo (Filename): ${fileName}\n\n`;
+                requestBody += "※ Please manually attach the photo to this email before sending.";
+
+                const encodedRequestBody = encodeURIComponent(requestBody);
+                const recipientEmail = "jsmarketing.sato@gmail.com"; // ★★★ ここにあなたのメールアドレスが設定されます ★★★
+                const requestSubject = encodeURIComponent("Product Request from Online Shop");
+
+                window.location.href = `mailto:${recipientEmail}?subject=${requestSubject}&body=${encodedRequestBody}`;
+
+                // Optionally clear the form after submission attempt
+                requestCommentInput.value = '';
+                requestPhotoInput.value = ''; // Clear file input
+                console.log("Product request email sent!");
+            });
+
 
             // --- Initialization processing ---
-            // Add event listener to all quantity selection dropdowns
             document.querySelectorAll('.quantity-select').forEach(selectElement => {
                 selectElement.addEventListener('change', calculateTotal);
             });
 
-            // Calculate and display initial total amount when page loads
             calculateTotal();
         });
     </script>
